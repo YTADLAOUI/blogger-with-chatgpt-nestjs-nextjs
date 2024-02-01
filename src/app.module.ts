@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [AuthModule,MongooseModule.forRootAsync({
     useFactory: () => ({
       uri: process.env.MONGODB_URI,
+      dbName: process.env.MONGODB_DB,
     }),
   }),
   ConfigModule.forRoot(),],
