@@ -13,7 +13,10 @@ export class AuthService {
     await createdUser.save();
     return createdUser;
   }
-  
+  async findOne(email: string){
+    const user = await this.userModel.findOne({ email });
+    return user;
+  }
 
   // create(createAuthDto: CreateAuthDto) {
   //   return 
