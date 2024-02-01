@@ -28,7 +28,21 @@ export class AuthController {
   }
    @Post('login')
 
-  
+  async login(@Body() body){
+    if(!body.email || !body.password){
+      return {status:400,message:"All fields are required"}
+    }
+    const user = await this.authService.findOne(body.email);
+    if(!user){
+      return {status:400,message:"User not found"}
+    }
+    
+    // const match = await bcrypt.compare(body.password, user.password);
+    // if(!match){
+    //   return {status:400,message:"Invalid credentials"}
+    // }
+    return {status:200,message:"Login successfull"}
+  }
 
   // @Post()
   // create(@Body() createAuthDto: CreateAuthDto) {
