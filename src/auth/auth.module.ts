@@ -5,8 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {User , userSchema} from './models/user.schema';
 // import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt';
+import { Token, tokenSchema } from './models/token.schema';
+import { TokenService } from './token/token.service';
 @Module({
-  imports: [ MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
+  imports: [ MongooseModule.forFeature([{ name: User.name, schema: userSchema },{name:Token.name,schema:tokenSchema}]),
   JwtModule.register({
     global: true,
     secret: 'secret',
@@ -14,6 +16,6 @@ import { JwtModule } from '@nestjs/jwt';
   }),
 ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, TokenService],
 })
 export class AuthModule {}

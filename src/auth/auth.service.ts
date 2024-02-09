@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './models/user.schema';
-import { RegisterAuth } from './dto/create-auth.dto';
 @Injectable()
 export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -18,6 +17,10 @@ export class AuthService {
   }
   async findOne(email: string){
     const user = await this.userModel.findOne({ email });
+    return user;
+  }
+  async findOneById(id: string){
+    const user = await this.userModel.findOne({ _id:id });
     return user;
   }
   // async  update(email:string) {

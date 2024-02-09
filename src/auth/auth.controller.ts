@@ -1,14 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcryptjs';
-import { LoginAuthDto, RegisterAuth } from './dto/create-auth.dto';
+import {  RegisterAuth } from './dto/register-auth.dto';
+import {  LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { TokenService } from './token/token.service';
 
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService, private jwtService:JwtService) {}
+  constructor(private readonly authService: AuthService, private jwtService:JwtService,private tokenService:TokenService) {}
 @Post('register')
   async register(@Body() body:RegisterAuth){
     if(!body.username || !body.email || !body.password){
@@ -41,24 +43,51 @@ export class AuthController {
     if(!match){
       return {status:400,message:"Invalid credentials"}
     }
-    const accessToken = await this.jwtService.signAsync({id:user._id},{expiresIn:'30s'});
-    const refreshToken = this.jwtService.signAsync({id:user._id}); 
+    const accessToken = await this.jwtService.signAsync({id:user._id},{expiresIn:'60s'});
+    const refreshToken =await this.jwtService.signAsync({id:user._id}); 
+    const expire_at = new Date(Date.now() + 7*24*60*60*1000);
+    await this.tokenService.save({
+      user_id:user._id,
+      token:refreshToken,
+      expire_at
+    });
     res.status(200);
-    res.cookie('refreshToken',refreshToken,{httpOnly:true,maxAge:1000*60*60*24*7});
+    res.cookie('refreshToken',refreshToken,{httpOnly:true,maxAge:7*24*60*60*1000});
 
     return {token:accessToken}
   }
   @Get('user')
    async user(@Req() req:Request ,@Res({passthrough:true}) res:Response){ 
     try{
-      
-    const accessToken = req.headers['authorization'].replace('Bearer','');
+      console.log(req.headers['authorization'].replace('Bearer ',''));
+    const accessToken = req.headers['authorization'].replace('Bearer ','');
     const {id} = await this.jwtService.verifyAsync(accessToken);
-    return await this.authService.findOne(id);
+    
+    const user = await this.authService.findOneById(id)
+    return {email:user.email,username:user.username};
    } catch(e){
     throw new Error('Invalid token');
    }
   }
-
-  
+  @Post('refresh')
+  async refresh(@Req() req:Request,@Res({passthrough:true}) res:Response){
+  try{
+    const refreshToken =req.cookies['refreshToken'];
+     const {id} = await this.jwtService.verifyAsync(refreshToken);
+     const tokenEntity = await this.tokenService.findOne({user_id:id,expire_at:{$gte:Date.now()}});
+     if(!tokenEntity){
+       throw new Error('Invalid token');
+     }
+     const accessToken = await this.jwtService.signAsync({id},{expiresIn:'60s'});
+      res.status(200);
+    return {token:accessToken};
+  }catch(e){
+    throw new Error('Invalid token');
+  }
+  }
+  @Post('logout')
+  async logout(@Res({passthrough:true}) res:Response){
+    res.clearCookie('refreshToken');
+    return {message:"Logged out"};
+  }
 }
