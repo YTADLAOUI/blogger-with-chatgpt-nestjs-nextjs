@@ -86,8 +86,12 @@ export class AuthController {
   }
   }
   @Post('logout')
-  async logout(@Res({passthrough:true}) res:Response){
+  async logout(@Req() req:Request,@Res({passthrough:true}) res:Response){
+
+    const refreshToken =req.cookies['refreshToken'];
+    await this.tokenService.delete({token:refreshToken});
     res.clearCookie('refreshToken');
     return {message:"Logged out"};
   }
+  
 }
