@@ -11,6 +11,5 @@ export class Reset {
 
     @Prop({ required: true,unique: true})
     token: string;
-    
 }
 export const resetSchema = SchemaFactory.createForClass(Reset);
