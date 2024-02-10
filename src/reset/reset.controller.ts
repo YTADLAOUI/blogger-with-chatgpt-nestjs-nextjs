@@ -8,6 +8,7 @@ export class ResetController {
   async forgotPassword(@Body('email') email: string) {
     const token = Math.random().toString(36).substring(2, 15);
     await this.resetService.save({ email, token });
+    await ResetService.sendEmail(email, 'Reset Password', `http://localhost:3000/api/reset/${token}`);
     return { message: 'Reset link has been sent to your email' };
   }
 }
