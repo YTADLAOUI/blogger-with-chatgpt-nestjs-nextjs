@@ -121,5 +121,9 @@ export class ResetService {
           console.log("Email Filed send");
         }
 }
+  async findOne(option){
+  return await this.resetModel.findOne(option)
+    
+    ;}
    
 }
