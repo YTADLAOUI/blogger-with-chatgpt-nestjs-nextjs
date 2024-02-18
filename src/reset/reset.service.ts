@@ -18,7 +18,6 @@ export class ResetService {
   static async sendEmail(email:string,subject:string,link:string)
   {
         try{
-          console.log(process.env.HOST, process.env.USER ,process.env.PASS)
             let transport = nodemailer.createTransport({
             host:process.env.HOST,
             port: 2525,
