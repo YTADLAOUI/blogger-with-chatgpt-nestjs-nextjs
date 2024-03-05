@@ -6,24 +6,24 @@ export type CommentDocument= HydratedDocument<Comment>
 
 export class Comment{
     @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'Article' })
-    article_id: string;
+    article_id: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'Article' })
-  article_author: string;
+  article_author: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: String, required: true })
   comment: string;
 
   @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'Comment' })
-  children: string[];
+  children: MongooseSchema.Types.ObjectId[];
 
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'User' })
-  commented_by: string;
+  commented_by: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: Boolean })
   isReply: boolean;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Comment' })
-  parent: string;
+  parent: MongooseSchema.Types.ObjectId;
 }
 export const CommentSchema = SchemaFactory.createForClass(Comment);

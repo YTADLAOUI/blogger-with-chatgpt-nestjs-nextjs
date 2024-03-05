@@ -22,7 +22,7 @@ export class Article {
   tags: string[];
 
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'User' })
-  author: string;
+  author: MongooseSchema.Types.ObjectId;
 
   @Prop({
     total_likes: { type: Number, default: 0 },
@@ -37,8 +37,8 @@ export class Article {
     total_parent_comments: number;
   };
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Comment' }] })
-  comments: string[];
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Comment'}] })
+  comments: MongooseSchema.Types.ObjectId[];
 
   @Prop({ type: Boolean, default: false })
   draft: boolean;
