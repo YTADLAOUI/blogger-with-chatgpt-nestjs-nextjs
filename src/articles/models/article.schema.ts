@@ -21,7 +21,7 @@ export class Article {
   @Prop({ type: [String] })
   tags: string[];
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'users' })
+  @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'User' })
   author: string;
 
   @Prop({
@@ -37,7 +37,7 @@ export class Article {
     total_parent_comments: number;
   };
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'comments' }] })
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Comment' }] })
   comments: string[];
 
   @Prop({ type: Boolean, default: false })
