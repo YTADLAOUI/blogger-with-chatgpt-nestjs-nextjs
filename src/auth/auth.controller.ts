@@ -59,7 +59,7 @@ export class AuthController {
   @Get('user')
    async user(@Req() req:Request ,@Res({passthrough:true}) res:Response){ 
     try{
-      console.log(req.headers['authorization'].replace('Bearer ',''));
+      // console.log(req.headers['authorization'].replace('Bearer ',''));
     const accessToken = req.headers['authorization'].replace('Bearer ','');
     const {id} = await this.jwtService.verifyAsync(accessToken);
     
