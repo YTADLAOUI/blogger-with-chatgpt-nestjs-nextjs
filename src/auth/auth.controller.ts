@@ -85,13 +85,13 @@ export class AuthController {
     throw new Error('Invalid token');
   }
   }
-  @Post('logout')
-  async logout(@Req() req:Request,@Res({passthrough:true}) res:Response){
+  // @Post('logout')
+  // async logout(@Req() req:Request,@Res({passthrough:true}) res:Response){
 
-    const refreshToken =req.cookies['refreshToken'];
-    await this.tokenService.delete({token:refreshToken});
-    res.clearCookie('refreshToken');
-    return {message:"Logged out"};
-  }
+  //   const refreshToken =req.cookies['refreshToken'];
+  //   await this.tokenService.delete({token:refreshToken});
+  //   res.clearCookie('refreshToken');
+  //   return {message:"Logged out"};
+  // }
   
 }

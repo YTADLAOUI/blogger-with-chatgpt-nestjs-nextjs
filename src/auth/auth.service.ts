@@ -8,10 +8,7 @@ export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async save(body:any){
-    console.log("first")
-    console.log(body)
     const createdUser= new this.userModel(body);
-    console.log('reer',createdUser)
     await createdUser.save();
     return createdUser;
   }

@@ -17,8 +17,8 @@ export class TokenService {
     const Token = await this.tokenModel.findOne(options);
     return Token;
   }
-  async delete(options){
-    const Token = await this.tokenModel.deleteOne(options);
-    return Token;
-  }
+  // async delete(options){
+  //   const Token = await this.tokenModel.deleteOne(options);
+  //   return Token;
+  // }
 }

@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { ResetModule } from './reset/reset.module';
 import { OpenaiModule } from './openAi/openai.module';
+import { ArticlesModule } from './articles/articles.module';
 @Module({
   imports: [AuthModule,ResetModule,OpenaiModule,MongooseModule.forRootAsync({
     useFactory: () => ({
@@ -13,7 +14,8 @@ import { OpenaiModule } from './openAi/openai.module';
       dbName: process.env.MONGODB_DB,
     }),
   }),
-  ConfigModule.forRoot(),],
+  ConfigModule.forRoot(),
+  ArticlesModule,],
   controllers: [AppController],
   providers: [AppService],
 })
