@@ -16,9 +16,18 @@ export class ArticlesService {
   async findAll(){
     return await this.articleModel.find().populate('author');
   }
-  async findOne(option){
-    return await this.articleModel.findOne(option);
+  async findOne(id){
+    try {
+    let incrmentVal = 1;
+
+    return await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name email").select('title des content tags activity comments id._id')
+    
+        }catch(e){
+      console.log('error',e)
+    } 
   }
+
+
    async update(id,options){
     return await this.articleModel.updateOne({ _id: id },options);
    }

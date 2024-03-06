@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ResetModule } from './reset/reset.module';
 import { OpenaiModule } from './openAi/openai.module';
 import { ArticlesModule } from './articles/articles.module';
+import { CommentsModule } from './comments/comments.module';
 @Module({
   imports: [AuthModule,ResetModule,OpenaiModule,MongooseModule.forRootAsync({
     useFactory: () => ({
@@ -15,7 +16,8 @@ import { ArticlesModule } from './articles/articles.module';
     }),
   }),
   ConfigModule.forRoot(),
-  ArticlesModule,],
+  ArticlesModule,
+  CommentsModule,],
   controllers: [AppController],
   providers: [AppService],
 })
