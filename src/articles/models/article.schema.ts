@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
-import { Activte } from '../dto/activte/activte';
+
 
 export type ArticleDocument = HydratedDocument<Article>;
 
@@ -23,7 +23,7 @@ export class Article {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'User' })
   author: MongooseSchema.Types.ObjectId;
-  
+
   @Prop({ type: Number, default: 0 })
   total_likes: number;
 
