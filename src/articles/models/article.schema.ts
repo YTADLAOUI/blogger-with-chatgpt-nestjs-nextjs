@@ -4,6 +4,23 @@ import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 export type ArticleDocument = HydratedDocument<Article>;
 
+@Schema()
+ class Activity  {
+  @Prop({ default: 0 })
+  total_likes: number;
+
+  @Prop({ default: 0 })
+  total_comments: number;
+
+  @Prop({ default: 0 })
+  total_reads: number;
+
+  @Prop({ default: 0 })
+  total_parent_comments: number;
+}
+
+//  const ActivitySchema = SchemaFactory.createForClass(Activity);
+
 @Schema({ timestamps: true })
 export class Article {
   @Prop({ type: String, required: true })
@@ -24,17 +41,9 @@ export class Article {
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'User' })
   author: MongooseSchema.Types.ObjectId;
 
-  @Prop({ type: Number, default: 0 })
-  total_likes: number;
 
-  @Prop({ type: Number, default: 0 })
-  total_comments: number;
-
-  @Prop({ type: Number, default: 0 })
-  total_reads: number;
-
-  @Prop({ type: Number, default: 0 })
-  total_parent_comments: number;
+  @Prop({ type: Activity, default: () => ({}) })
+  activity: Activity;
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Comment' }] })
   comments: MongooseSchema.Types.ObjectId[];
