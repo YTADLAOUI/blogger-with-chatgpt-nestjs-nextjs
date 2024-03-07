@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import logo from '../assets/logo.jpg'
 
 const navbar = () => {
   const [searchBoxVisible, setSearchBoxVisible] = useState(false)
   return (
+  <>
     <nav className="navbar">
       <Link to="/" className="flex-none w-12">
         <img src={logo} alt="logo" className="w-full"/>
@@ -22,10 +23,12 @@ const navbar = () => {
             <span className="hidden md:inline">Editor</span>
           </i>
         </Link>
-        <Link className="btn-dark py-2 px-4 hidden md:flex" to="/signin">Sign In</Link>
-        <Link className="btn-light py-2 px-4 hidden md:flex" to="/signin">Sign Up</Link>
+        <Link className="btn-dark py-2 px-4 md:flex" to="/signin">Sign In</Link>
+        <Link className="btn-light py-2 px-4 hidden md:flex" to="/signup">Sign Up</Link>
       </div>
     </nav>
+    <Outlet/>
+  </>
   )
 }
 
