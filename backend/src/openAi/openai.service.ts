@@ -9,7 +9,6 @@ import {OpenAI} from "openai";
 export class OpenaiService {
   constructor(
      @InjectModel(OpenAi.name) private readonly openAiModel: Model<OpenAi>,
-
   ) {}
   
   async openAi(prompt: string) {

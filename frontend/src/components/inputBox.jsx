@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const inputBox = ({name,type,id, value, placeholder,icon}) => {
+const inputBox = ({name,type,id, value, placeholder,icon,onChange}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -11,6 +11,7 @@ const inputBox = ({name,type,id, value, placeholder,icon}) => {
     id={id}
     defaultValue={value}
     placeholder={placeholder}
+    onChange={onChange}
     className='input-box'
     />
     <i className={`fi ${icon} input-icon`}></i>
