@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import InputBox from '../components/inputBox'
 import google from '../assets/google.png'
 import toast, { Toaster } from 'react-hot-toast';
-import axios from 'axios'
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 const authForm = ({page}) => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-
+  const [redrict, setRedrict] = useState(false)
   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   let passwordRegex = /^(?=.*[A-Z]).{8,}$/;
   const submit = (e) => {
@@ -29,22 +30,17 @@ const authForm = ({page}) => {
     if(page==="sign-in"){
       (
         async () => {
-          const response = await axios.post('http://localhost:3000/api/login', {
+          const {data} = await axios.post('http://localhost:3000/api/login', {
                     email: email,
                     password: password
                   }, {
                     headers: {
                       'Content-Type': 'application/json'
                     },
-                    Credential: true
+                    withCredentials: true
                   });
-                  console.log(response.data.username);
-                  console.log(response.status===200);
-                  if(response.status===200){
-                     toast.success('Welcome back '+ response.data.username )}
-                  else{
-                    toast.error('An error occured')
-                  }
+                  axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+                  setRedrict(true)
                 }
       )()     
       
@@ -77,6 +73,10 @@ const authForm = ({page}) => {
       }
    
     }}
+
+    if(redrict){
+      return <Navigate to="/dashbord" />
+    }
 
   return (
    <section className="h-cover flex items-center justify-center">
