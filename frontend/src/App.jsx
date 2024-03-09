@@ -8,6 +8,7 @@ import AuthMidd from './middlewares/authMidd'
 import { useDispatch } from 'react-redux'
 import { login } from './features/authSlice'
 import { getSession } from './common/session'
+import Editor from './pages/editor'
 
 function App() {
 
@@ -17,19 +18,18 @@ function App() {
 
   useEffect(() => {
     const user = getSession('user');
-    console.log(user, 'appccccc');
-
     if (user) {
       dispatch(login(JSON.parse(user)));
       setUser(JSON.parse(user));
     } else {
       dispatch(login(null));
     }
-  });
+  }, []);
 
   return (
     <>
     <Routes>
+      <Route path='/editor' element={<Editor/>}/>
       <Route path='/' element={<Navbar user={user}/>}>
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
