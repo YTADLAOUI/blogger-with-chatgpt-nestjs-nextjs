@@ -13,6 +13,8 @@ const storeSession = (key,value) => {
    sessionStorage.clear()
   }
 
+  const islogin = () => {
+    return JSON.parse(getSession('user')).islogin
+  }
 
-
-export {storeSession, getSession, removeSession, logout}
+export {storeSession, getSession, removeSession, logout, islogin}

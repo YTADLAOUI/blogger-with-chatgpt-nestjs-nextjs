@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import logo from '../assets/logo.jpg'
 import UserPanel from './userPanel'
+import { useSelector, useDispatch } from 'react-redux'
 
-const navbar = () => {
+const navbar = ({user}) => {
   const [searchBoxVisible, setSearchBoxVisible] = useState(false)
   const [userPanelVisible, setUserPanelVisible] = useState(false)
-  const handlePanelUser = () => {
-    console.log('User Panel Clicked')
 
-  }
+  const data=useSelector(state => state.auth.user);
+console.log(data,'navbar')
+
   return (
   <>
     <nav className="navbar">
@@ -30,6 +31,9 @@ const navbar = () => {
           </i>
         </Link>
         {/* --- */}
+        {
+        user?.islogin?
+          <>
         <Link to="/dashboard/notification" >
           <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">
             <i className="fi fi-rr-bell text-2xl ">
@@ -45,9 +49,12 @@ const navbar = () => {
            <UserPanel/>:''
            } 
           </div>
-      {/* --- */}
+          </>:
+        <>
         <Link className="btn-dark py-2 px-4 md:flex" to="/signin">Sign In</Link>
         <Link className="btn-light py-2 px-4 hidden md:flex" to="/signup">Sign Up</Link>
+         </>
+        }
       </div>
     </nav>
     <Outlet/>
