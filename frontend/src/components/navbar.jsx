@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import logo from '../assets/logo.jpg'
+import UserPanel from './userPanel'
 
 const navbar = () => {
   const [searchBoxVisible, setSearchBoxVisible] = useState(false)
+  const [userPanelVisible, setUserPanelVisible] = useState(false)
+  const handlePanelUser = () => {
+    console.log('User Panel Clicked')
+
+  }
   return (
   <>
     <nav className="navbar">
@@ -23,6 +29,23 @@ const navbar = () => {
             <span className="hidden md:inline">Editor</span>
           </i>
         </Link>
+        {/* --- */}
+        <Link to="/dashboard/notification" >
+          <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">
+            <i className="fi fi-rr-bell text-2xl ">
+            </i>
+          </button>
+        </Link>
+        <div className="relative" onClick={()=>setUserPanelVisible((curr)=>!curr)}>
+          <button className='w-12 h-12 rounded-full'>
+            <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" alt="profile" className="w-full h-full object-cover rounded-full"/>
+          </button>
+           {
+              userPanelVisible?
+           <UserPanel/>:''
+           } 
+          </div>
+      {/* --- */}
         <Link className="btn-dark py-2 px-4 md:flex" to="/signin">Sign In</Link>
         <Link className="btn-light py-2 px-4 hidden md:flex" to="/signup">Sign Up</Link>
       </div>
