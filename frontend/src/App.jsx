@@ -3,7 +3,8 @@ import './App.css'
 import Navbar from './components/navbar'
 import { Route, Routes } from 'react-router-dom'
 import AuthForm from './pages/authForm'
-import Dashbord from './pages/dashbord'
+import Dashboard from './pages/dashbord'
+import AuthMidd from './middlewares/authMidd'
 
 function App() {
   
@@ -14,7 +15,7 @@ function App() {
       <Route path='/' element={<Navbar/>}>
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
-        <Route path='/dashbord' element={<Dashbord/>}/>
+        <Route path='dashboard' element={<Dashboard/>}/>
       </Route>
     </Routes>
     </>

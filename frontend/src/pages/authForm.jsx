@@ -75,7 +75,7 @@ const authForm = ({page}) => {
     }}
 
     if(redrict){
-      return <Navigate to="/dashbord" />
+      return <Navigate to="/dashboard" />
     }
 
   return (
