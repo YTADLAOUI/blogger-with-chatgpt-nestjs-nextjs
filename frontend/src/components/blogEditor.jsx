@@ -1,16 +1,40 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../assets/logo.jpg'
 import banners from '../assets/blogbanner.png'
 import { useDispatch, useSelector } from 'react-redux'
-import { editBlog } from '../features/editSlice'
-
+import { editBlog, setEditorState, setTextEditor } from '../features/editSlice'
+import EditorJS from '@editorjs/editorjs'
+import { tools } from './toolsEditor'
+import toast from 'react-hot-toast'
 const blogEditor = () => {
   let blogBanner=useRef()
   const dispatch=useDispatch()
   const blog=useSelector(state=>state.blog.value)
   const {title,banner,content,tags,des,author}=blog
-  // console.log(blog,'blog')
+  // const textEditor=useSelector(state=>state.blog.textEditor)
+  const [data,setData]=useState({})
+  console.log(blog,'blog')
+
+  useEffect(() => {
+    const initializeEditor = async () => {
+      try {
+
+        const editor = new EditorJS({
+          holderId: "textEditor",
+          data: '',
+          tools: tools,
+          placeholder: 'Start Writing your blog'
+        });
+        setData(editor)
+
+      } catch (error) {
+        console.error('Error initializing EditorJS:', error);
+      }
+    };
+  
+    initializeEditor();
+  }, []);
   const handleTitle = (e) => {
    let input= e.target
    input.style.height='auto'
@@ -27,6 +51,26 @@ const blogEditor = () => {
       reader.readAsDataURL(img)
     }
   }
+  const handlePublish=()=>{
+    console.log('first')
+    if(!title.length){
+
+      return toast.error("write blog title to publish it")
+    }
+    console.log(data)
+    data.save().then(
+      (out)=>{
+        if(out.blocks.length){
+        console.log(out,'gfdge')
+      dispatch(editBlog({...blog,content:out}))
+        dispatch(setEditorState('publish'))
+          }else{
+            return toast.error('Write something in your blog to publish it')
+          }
+       }
+      )
+  
+  }
   return (
     <>
     <nav className='navbar'>
@@ -38,7 +82,7 @@ const blogEditor = () => {
         </p>
         <div className="flex items-center gap-3 ml-auto">
          
-            <button className='btn-dark py-2'>
+            <button className='btn-dark py-2' onClick={handlePublish}> 
               Publish
             </button>
             <button className='btn-light py-2'>
@@ -73,6 +117,9 @@ const blogEditor = () => {
       >
       </textarea>
       <hr className='w-full opacity-10 my-5'/>
+      <div id='textEditor'
+      className='font-gelasio text-lg w-full h-[70vh] overflow-y-auto outline-none resize-none leading-relaxed'
+    ></div>
     </div>
 
       </section>
