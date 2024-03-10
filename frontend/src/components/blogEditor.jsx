@@ -22,7 +22,7 @@ const blogEditor = () => {
 
         const editor = new EditorJS({
           holderId: "textEditor",
-          data: '',
+          data: content,
           tools: tools,
           placeholder: 'Start Writing your blog'
         });
@@ -111,6 +111,7 @@ const blogEditor = () => {
       </label>
       </div>
       <textarea
+      defaultValue={title}
       placeholder='blog Title'
       className='text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40'
       onKeyUp={handleTitle}
