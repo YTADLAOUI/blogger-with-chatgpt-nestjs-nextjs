@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { editBlog, setEditorState } from '../features/editSlice'
 import Tag from './tags'
 import toast from 'react-hot-toast'
+import axios from 'axios'
 const publishForm = () => {
   const dispatch=useDispatch()
   const blog=useSelector(state=>state.blog.value)
@@ -39,6 +40,42 @@ const tagLimit=9
             }
             e.target.value=""
       }
+  }
+
+  const storeData=async()=>{
+
+    try {
+      if(!title){
+        toast.error('please add title')
+        
+      }
+      if(!des){ 
+        toast.error('please add description')
+      }
+      if(!tags.length){
+        toast.error('please add tags')
+      }
+      if(!banner){
+        toast.error('please add banner')
+      }
+        
+
+    const loadingToastId = toast.loading('save article...', { autoClose: false });
+    const  response =await axios.post('http://localhost:3000/api/saveArticle', {...blog,author:"65bb2b207976daa7d11e5140"},
+    {
+      withCredentials: true,
+    });
+    console.log(response.data,'response')
+    toast.dismiss(loadingToastId);
+    toast.success('article saved successfully')
+    dispatch(editBlog({title:'',banner:'',content:[],tags:[],des:'',author:{username:'',id:''}}))
+  }
+    catch (error) {
+      console.log(error)
+      toast.dismiss(loadingToastId)
+      toast.error('Error while saving article')
+    }
+    
   }
   return (
   
@@ -91,7 +128,7 @@ const tagLimit=9
           {tagLimit-tags.length }
            tags left
         </p>
-          <button className='btn-dark px-8'>Publish</button>
+          <button className='btn-dark px-8' onClick={()=>storeData()}>Publish</button>
       </div>
     </section>
   )

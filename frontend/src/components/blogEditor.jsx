@@ -7,6 +7,7 @@ import { editBlog, setEditorState, setTextEditor } from '../features/editSlice'
 import EditorJS from '@editorjs/editorjs'
 import { tools } from './toolsEditor'
 import toast from 'react-hot-toast'
+import axios from 'axios'
 const blogEditor = () => {
   let blogBanner=useRef()
   const dispatch=useDispatch()
@@ -41,16 +42,39 @@ const blogEditor = () => {
    input.style.height=input.scrollHeight+'px'
     dispatch(editBlog({...blog,title:input.value}))
   }
-  const handleBanner = (e) => {
-    let img=e.target.files[0]
-    if(img){
-      let reader=new FileReader()
-      reader.onloadend=()=>{
-        blogBanner.current.src=reader.result
+  const handleBanner = async (e) => {
+    try {
+      let img = e.target.files[0];
+
+      if (img) {
+        const formData = new FormData();
+        formData.append('banner', img);
+
+        const loadingToastId = toast.loading('Uploading image...', { autoClose: false });
+
+        const response = await axios.post('http://localhost:3000/api/uploadImage', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        });
+
+        console.log(response.data, 'response');
+
+        toast.dismiss(loadingToastId);
+
+        dispatch(editBlog({ ...blog, banner: response.data }));
+
+        if (blogBanner.current) {
+          blogBanner.current.src = response.data;
+        }
       }
-      reader.readAsDataURL(img)
+    } catch (error) {
+      console.error('Error uploading image:', error);
+
+      toast.error('Failed to upload image. Please try again.');
     }
-  }
+  };
   const handlePublish=()=>{
     console.log('first')
     if(!title.length){
@@ -98,7 +122,7 @@ const blogEditor = () => {
       <label htmlFor='uploadBanner' >
         <img
         ref={blogBanner}
-        src={banners} alt=""
+        src={banner ? banner:banners} alt=""
         className='z-20'
         
         />

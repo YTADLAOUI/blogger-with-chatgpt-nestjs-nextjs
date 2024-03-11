@@ -22,8 +22,8 @@ export class ArticlesService {
       const blogs = await this.articleModel
         .find({ draft: false })
         .populate('author',"name email")
-        .sort({ publishedAt: -1 })
-        .select('title des content tags activity comments id._id publishedAt')
+        .sort({ createdAt: -1 })
+        .select('title des content tags banner activity comments id._id createdAt')
         .limit(maxLimit);
 
       return blogs ;
