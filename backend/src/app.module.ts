@@ -8,6 +8,7 @@ import { ResetModule } from './reset/reset.module';
 import { OpenaiModule } from './openAi/openai.module';
 import { ArticlesModule } from './articles/articles.module';
 import { CommentsModule } from './comments/comments.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 @Module({
   imports: [AuthModule,ResetModule,OpenaiModule,MongooseModule.forRootAsync({
     useFactory: () => ({
@@ -17,7 +18,9 @@ import { CommentsModule } from './comments/comments.module';
   }),
   ConfigModule.forRoot(),
   ArticlesModule,
-  CommentsModule,],
+  CommentsModule,
+  CloudinaryModule
+],
   controllers: [AppController],
   providers: [AppService],
 })

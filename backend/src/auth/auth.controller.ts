@@ -60,29 +60,37 @@ export class AuthController {
    async user(@Req() req:Request ,@Res({passthrough:true}) res:Response){ 
     try{
       // console.log(req.headers['authorization'].replace('Bearer ',''));
+      if(!req.headers['authorization']){
+        res.status(401);
+        return {message:"No token found"}
+      }
     const accessToken = req.headers['authorization'].replace('Bearer ','');
     const {id} = await this.jwtService.verifyAsync(accessToken);
     
     const user = await this.authService.findOneById(id)
-    return {email:user.email,username:user.username};
+    const {email,username} = user;
+    return {email,username};
    } catch(e){
-    throw new Error('Invalid token');
+    console.log(e);
+    res.status(401);
+     return {message:"Invalid token"}
    }
   }
   @Post('refresh')
   async refresh(@Req() req:Request,@Res({passthrough:true}) res:Response){
   try{
     const refreshToken =req.cookies['refreshToken'];
+  
      const {id} = await this.jwtService.verifyAsync(refreshToken);
      const tokenEntity = await this.tokenService.findOne({user_id:id,expire_at:{$gte:Date.now()}});
      if(!tokenEntity){
-       throw new Error('Invalid token');
+       console.log('Invalid token');
      }
      const accessToken = await this.jwtService.signAsync({id},{expiresIn:'60s'});
       res.status(200);
     return {token:accessToken};
   }catch(e){
-    throw new Error('Invalid token');
+    console.log('Invalid token');
   }
   }
   // @Post('logout')

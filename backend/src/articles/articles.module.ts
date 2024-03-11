@@ -3,9 +3,10 @@ import { ArticlesService } from './articles.service';
 import { ArticlesController } from './articles.controller';
 import { Article, ArticleSchema } from './models/article.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{name:Article.name,schema:ArticleSchema}]) ],
+  imports: [MongooseModule.forFeature([{name:Article.name,schema:ArticleSchema}]),CloudinaryModule ],
   providers: [ArticlesService],
   controllers: [ArticlesController]
 })

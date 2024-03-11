@@ -32,8 +32,8 @@ export class Article {
   @Prop({ type: String, maxlength: 200 })
   des: string;
 
-  @Prop({ type: [String] })
-  content: string[];
+  @Prop({ type: Object })
+  content: any;
 
   @Prop({ type: [String] })
   tags: string[];

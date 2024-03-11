@@ -1,18 +1,26 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors,  } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('')
 export class ArticlesController {
   constructor(
     private readonly articlesService: ArticlesService,
+    
   ) {}
   @Post('saveArticle')
   async saveArticle(@Body() body:any){
+    console.log('body',body)
         if(!body.title || !body.des || !body.content || !body.tags || !body.author){
               return {error: 'All fields are required'};
         }
-      
     return await this.articlesService.save(body);
+  }
+  @Post('uploadImage')
+  @UseInterceptors(FileInterceptor('banner'))
+  async uploadImage(@UploadedFile() file: Express.Multer.File){
+    return await this.articlesService.createImage(file);
   }
   @Get('getArticles')
   async getArticles(){
