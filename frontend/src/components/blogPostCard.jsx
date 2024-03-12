@@ -3,10 +3,10 @@ import logo from '../assets/logo.jpg'
 import { getDay } from '../common/date'
 import { Link } from 'react-router-dom'
 const blogPostCard = ({content,author}) => {
-  let {title,des,createdAt,tags,banner,activity:{total_like},blog_id:id} = content
+  let {title,des,createdAt,tags,banner,activity:{total_like},_id} = content
   let {username} = author
   return (
-  <Link to={`/blog/${id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4'>
+  <Link to={`/blog/${_id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4'>
     <div className='w-full'>
       <div className='flex gap-2 items-center mb-7'>
         <img src={logo} alt="" className='w-6 h-6 rounded-full' />

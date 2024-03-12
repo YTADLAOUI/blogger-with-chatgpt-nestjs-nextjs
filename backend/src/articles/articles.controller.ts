@@ -26,6 +26,10 @@ export class ArticlesController {
   async getArticles(){
     return await this.articlesService.findAll();
   }
+  @Get('getTrendingArticles')
+  async getTrendingArticles(){
+    return await this.articlesService.trendingBlogs();
+  }
   @Get('getArticle/:id')
   async getArticle(@Param('id') id: string){
     return await this.articlesService.findOne({ _id: id });

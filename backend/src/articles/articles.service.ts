@@ -21,9 +21,26 @@ export class ArticlesService {
       let maxLimit = 5;
       const blogs = await this.articleModel
         .find({ draft: false })
-        .populate('author',"name email")
+        .populate('author',"username email _id")
         .sort({ createdAt: -1 })
         .select('title des content tags banner activity comments id._id createdAt')
+        .limit(maxLimit);
+
+      return blogs ;
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching articles:', error);
+      // return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+  async trendingBlogs() {
+    try {
+      let maxLimit = 5;
+      const blogs = await this.articleModel
+        .find({ draft: false })
+        .populate('author',"username email and _id")
+        .sort({"activity.total_read":-1, "activity.total_likes":-1,"createdAt": -1 })
+        .select('blog_id title des content tags banner activity comments id._id createdAt')
         .limit(maxLimit);
 
       return blogs ;
