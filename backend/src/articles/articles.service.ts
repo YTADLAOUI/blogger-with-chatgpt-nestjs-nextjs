@@ -16,13 +16,14 @@ export class ArticlesService {
     return createdArticle;
   }
   
-  async findAll() {
+  async findAll(page: number) {
     try {
       let maxLimit = 5;
       const blogs = await this.articleModel
         .find({ draft: false })
         .populate('author',"username email _id")
         .sort({ createdAt: -1 })
+        .skip((page - 1) * maxLimit)
         .select('title des content tags banner activity comments id._id createdAt')
         .limit(maxLimit);
 
@@ -61,7 +62,24 @@ export class ArticlesService {
       console.log('error',e)
     } 
   }
-
+    async search(tag){
+      let maxLimit = 5;
+      let findQuery = {draft: false, tags:tag};
+      try {
+        
+        const blogs = await this.articleModel
+          .find(findQuery)
+          .populate('author',"username email and _id")
+          .sort({ createdAt: -1 })
+          .select('title des content tags banner activity comments id._id createdAt')
+          .limit(maxLimit);
+          return blogs;
+      } catch (error) {
+        // Handle errors here
+        console.error('Error fetching articles:', error);
+        // return res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
 
    async update(id,options){
     return await this.articleModel.updateOne({ _id: id },options);

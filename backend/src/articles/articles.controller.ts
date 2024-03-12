@@ -22,13 +22,22 @@ export class ArticlesController {
   async uploadImage(@UploadedFile() file: Express.Multer.File){
     return await this.articlesService.createImage(file);
   }
-  @Get('getArticles')
-  async getArticles(){
-    return await this.articlesService.findAll();
+  @Post('getArticles')
+  async getArticles(@Body() body:any){
+        const {page} = body;
+    return await this.articlesService.findAll(page);
   }
   @Get('getTrendingArticles')
   async getTrendingArticles(){
     return await this.articlesService.trendingBlogs();
+  }
+    @Post('searchArticles')
+  async searchArticles(@Body() body:any){
+    const {tag} = body;
+    console.log(tag)
+    const returnData =await this.articlesService.search(tag);
+    console.log('returnData',returnData)
+    return returnData
   }
   @Get('getArticle/:id')
   async getArticle(@Param('id') id: string){

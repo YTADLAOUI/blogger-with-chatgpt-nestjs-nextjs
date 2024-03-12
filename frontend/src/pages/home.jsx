@@ -4,15 +4,21 @@ import axios from 'axios'
 import Loader from '../components/loader'
 import BlogPostCard from '../components/blogPostCard'
 import MinimalBlogPost from '../components/minimalBlogPost'
+import NodataMessage from '../components/noDataMessage'
 const home = () => {
 
   const [blogs, setBlogs] = useState([])
   const [trendingBlogs, setTrendingBlogs] = useState([])
   const [pageState, setPageState] = useState("Home")
   let categories = ["programming","hollywood","film making", "social media","technology","science","space","history","politics","sports","music"]
-  const blogPost= async () => {
+  const blogPost= async (page=2) => {
     try {
-      const response = await axios.get('http://localhost:3000/api/getArticles')
+      const response = await axios.post('http://localhost:3000/api/getArticles',{page}, {
+        headers: {
+          'Content-Type': 'application/json',
+          'withCredentials': true,
+        }   
+      })
       console.log(response.data)
       setBlogs(response.data)
      
@@ -24,9 +30,7 @@ const home = () => {
  let category= e.target.innerText.toLowerCase()
     setBlogs(null)
     if(pageState==category){
-
       setPageState("Home")
-
       blogPost()
       return;
   }
@@ -43,10 +47,28 @@ const home = () => {
       console.error(error)
     }
   }
+  const fetchBlogByCategory = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/searchArticles', {tag:pageState}, {
+        headers: {
+          'Content-Type': 'application/json',
+          'withCredentials': true,
+        }   
+      })
+
+      console.log(response.data, "response")
+      setBlogs(response.data)
+    } catch (error) {
+      console.error(error)
+    }
+  
+  }
   useEffect(() => {
 
     if(pageState=="Home"){
       blogPost()
+    }else{
+      fetchBlogByCategory()
     }
       if(trendingBlogs){
         trendingBlogPost()
@@ -60,17 +82,22 @@ const home = () => {
     <InPageNav routes={[pageState,"trending blogs"]} defaultHidden={["trending blogs"]}> 
       <>
         {
-      blogs==null ?<Loader/>  : 
+      blogs==null ? <Loader/>  : 
+      blogs.length ?
       blogs.map((blog,i) => {
         return <BlogPostCard key={i} content={blog} author={blog.author} />
-      })
+      }):
+       <NodataMessage message="No blogs found"/>
         }
+
       </>
         {
       trendingBlogs==null ?<Loader/>  : 
+      trendingBlogs.length ?
       trendingBlogs.map((blog,i) => {
         return <MinimalBlogPost key={i} content={blog} author={blog.author} index={i} />
-      })
+      }):
+        <NodataMessage message="No blogs found"/>
         }
     </InPageNav>
       </div>
@@ -92,10 +119,12 @@ const home = () => {
           <div>
             <h1 className='text-xl font-medium mb-8'>Trending</h1>
             {
-            trendingBlogs==null ?<Loader/>  : 
+            trendingBlogs==null ?<Loader/>  :
+            trendingBlogs.length ?
             trendingBlogs.map((blog,i) => {
               return <MinimalBlogPost key={i} content={blog} author={blog.author} index={i} />
-            })
+            }):
+            <NodataMessage message="No blogs found"/>
           }
           </div>
         </div>
