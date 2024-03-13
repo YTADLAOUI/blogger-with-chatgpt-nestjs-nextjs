@@ -46,8 +46,10 @@ export class ArticlesController {
   }
   @Post('search-blogs-count')
   async searchBlogsCount(@Body() body:any ,@Res() res:any){
-    const {tag} = body;
-    const count = await this.articlesService.serchCount(tag);
+    console.log('body',body)
+    const {query} = body;
+    const count = await this.articlesService.serchCount(query);
+    console.log('count',count)
     return res.status(200).json({totalDocs:count});
   }
   @Get('getArticle/:id')

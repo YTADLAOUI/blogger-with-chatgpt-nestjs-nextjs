@@ -18,9 +18,10 @@ const dashbord = () => {
           console.log(response.data);
           if(response.status === 200){
           storeSession('user', JSON.stringify({...response.data, islogin:true}));
+          dispatch(login(JSON.parse({...response.data, islogin:true})));
           }
       } catch (error) {
-        console.log(error.response.status)
+        // console.log(error.response.status)
         if (error.response && error.response.status === 401) {
           await handleTokenRefresh();
           const res = await axios.get('http://localhost:3000/api/user');

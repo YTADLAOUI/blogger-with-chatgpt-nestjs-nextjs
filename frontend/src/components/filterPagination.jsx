@@ -8,7 +8,7 @@ export const filterPagination = async({creation_new_arr=false,state,data,page,co
     console.log('here')
     obj = {...state, results:[...state.results, ...data], page:page}
   }else {
-
+      console.log(counteRoute, "counteRoute")
     await axios.post('http://localhost:3000/api'+counteRoute, data_to_send, {
       headers: {
         'Content-Type': 'application/json',

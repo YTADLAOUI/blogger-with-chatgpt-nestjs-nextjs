@@ -10,6 +10,7 @@ import { login } from './features/authSlice'
 import { getSession } from './common/session'
 import Editor from './pages/editor'
 import Home from './pages/home'
+import SearchPage from './pages/searchPage'
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
         <Route path='dashboard' element={<Dashboard/>}/>
         <Route path='Home' element={<Home/>}/>
+        <Route path='search/:query' element={<SearchPage/>}/>
       </Route>
     </Routes>
     </>
