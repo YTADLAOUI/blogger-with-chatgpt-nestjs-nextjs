@@ -34,6 +34,26 @@ export class ArticlesService {
       // return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+  async allLatestBlogs() {
+    try {
+      const count = await this.articleModel.countDocuments({ draft: false });
+      return count ;
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching articles:', error);
+      // return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+  async serchCount(tag:any) {
+    try {
+      const count = await this.articleModel.countDocuments({ tags:tag ,draft: false });
+      return count ;
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching articles:', error);
+      // return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
   async trendingBlogs() {
     try {
       let maxLimit = 5;
@@ -62,8 +82,8 @@ export class ArticlesService {
       console.log('error',e)
     } 
   }
-    async search(tag){
-      let maxLimit = 5;
+    async search(tag,page){
+      let maxLimit = 4;
       let findQuery = {draft: false, tags:tag};
       try {
         
@@ -72,6 +92,7 @@ export class ArticlesService {
           .populate('author',"username email and _id")
           .sort({ createdAt: -1 })
           .select('title des content tags banner activity comments id._id createdAt')
+          .skip((page - 1) * maxLimit)
           .limit(maxLimit);
           return blogs;
       } catch (error) {

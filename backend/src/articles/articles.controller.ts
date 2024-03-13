@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors,  } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors,  } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -33,11 +33,22 @@ export class ArticlesController {
   }
     @Post('searchArticles')
   async searchArticles(@Body() body:any){
-    const {tag} = body;
+    const {tag,page} = body;
     console.log(tag)
-    const returnData =await this.articlesService.search(tag);
+    const returnData =await this.articlesService.search(tag,page);
     console.log('returnData',returnData)
     return returnData
+  }
+  @Post('all-latest-blogs')
+  async allLatestBlogs(@Body() body:any ,@Res() res:any){
+    const count = await this.articlesService.allLatestBlogs();
+    return res.status(200).json({totalDocs:count});
+  }
+  @Post('search-blogs-count')
+  async searchBlogsCount(@Body() body:any ,@Res() res:any){
+    const {tag} = body;
+    const count = await this.articlesService.serchCount(tag);
+    return res.status(200).json({totalDocs:count});
   }
   @Get('getArticle/:id')
   async getArticle(@Param('id') id: string){

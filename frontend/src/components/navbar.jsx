@@ -9,7 +9,8 @@ const navbar = ({user}) => {
   const [userPanelVisible, setUserPanelVisible] = useState(false)
 
   const data=useSelector(state => state.auth.user);
-console.log(data,'navbar')
+// console.log(data,'navbar')
+  useEffect(() => {}, [data, user])
 
   return (
   <>

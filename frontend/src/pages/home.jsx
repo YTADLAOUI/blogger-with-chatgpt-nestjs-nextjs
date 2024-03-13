@@ -5,13 +5,15 @@ import Loader from '../components/loader'
 import BlogPostCard from '../components/blogPostCard'
 import MinimalBlogPost from '../components/minimalBlogPost'
 import NodataMessage from '../components/noDataMessage'
+import {filterPagination} from '../components/filterPagination'
+import LoadMoreData from '../components/loadMoreData'
 const home = () => {
 
-  const [blogs, setBlogs] = useState([])
+  const [blogs, setBlogs] = useState(null)
   const [trendingBlogs, setTrendingBlogs] = useState([])
   const [pageState, setPageState] = useState("Home")
   let categories = ["programming","hollywood","film making", "social media","technology","science","space","history","politics","sports","music"]
-  const blogPost= async (page=2) => {
+  const blogPost= async ({page=1}) => {
     try {
       const response = await axios.post('http://localhost:3000/api/getArticles',{page}, {
         headers: {
@@ -19,8 +21,16 @@ const home = () => {
           'withCredentials': true,
         }   
       })
-      console.log(response.data)
-      setBlogs(response.data)
+      console.log(blogs,'hello')
+      console.log(response.data, "response")
+      let formDatas= await filterPagination({
+        state:blogs,
+        data:response.data,
+        page,
+        counteRoute:"/all-latest-blogs",
+      })
+      console.log(formDatas, "formDataHere")
+      setBlogs(formDatas)
      
     } catch (error) {
       console.error(error)
@@ -47,17 +57,25 @@ const home = () => {
       console.error(error)
     }
   }
-  const fetchBlogByCategory = async () => {
+  const fetchBlogByCategory = async ({page=1}) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/searchArticles', {tag:pageState}, {
+      const response = await axios.post('http://localhost:3000/api/searchArticles', {tag:pageState,page}, {
         headers: {
           'Content-Type': 'application/json',
           'withCredentials': true,
         }   
       })
-
+      let formDatas= await filterPagination({
+        state:blogs,
+        data:response.data,
+        page,
+        counteRoute:"/search-blogs-count",
+        data_to_send:{tag:pageState}
+      })
+      console.log(formDatas, "formDataHere")
+      setBlogs(formDatas)
       console.log(response.data, "response")
-      setBlogs(response.data)
+      // setBlogs(response.data)
     } catch (error) {
       console.error(error)
     }
@@ -66,15 +84,15 @@ const home = () => {
   useEffect(() => {
 
     if(pageState=="Home"){
-      blogPost()
+      blogPost({page:1})
     }else{
-      fetchBlogByCategory()
+      fetchBlogByCategory({page:1})
     }
       if(trendingBlogs){
         trendingBlogPost()
       }
   }, [pageState])
-  console.log(pageState);
+  console.log(blogs, "blogs123");
   return (
     <section className='h-cover flex justify-center gap-10'>
 
@@ -83,13 +101,15 @@ const home = () => {
       <>
         {
       blogs==null ? <Loader/>  : 
-      blogs.length ?
-      blogs.map((blog,i) => {
+      blogs.results.length ?
+      blogs.results.map((blog,i) => {
         return <BlogPostCard key={i} content={blog} author={blog.author} />
-      }):
+      })
+      
+      :
        <NodataMessage message="No blogs found"/>
         }
-
+          <LoadMoreData state={blogs} fetchData={blogPost}/>
       </>
         {
       trendingBlogs==null ?<Loader/>  : 

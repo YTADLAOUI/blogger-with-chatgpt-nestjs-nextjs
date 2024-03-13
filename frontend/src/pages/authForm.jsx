@@ -76,6 +76,7 @@ const authForm = ({page}) => {
 
     if(redrict){
       return <Navigate to="/dashboard" />
+      // window.location.href = "/dashboard"
     }
 
   return (
