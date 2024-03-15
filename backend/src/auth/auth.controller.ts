@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req ,HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcryptjs';
 import {  RegisterAuth } from './dto/register-auth.dto';
@@ -68,8 +68,9 @@ export class AuthController {
     const {id} = await this.jwtService.verifyAsync(accessToken);
     
     const user = await this.authService.findOneById(id)
-    const {email,username} = user;
-    return {email,username};
+    const userDetails = { username: user.username, email: user.email, profile_img: user.profile_img, role: user.role, id: user._id};
+    res.status(200);
+      return userDetails;
    } catch(e){
     console.log(e);
     res.status(401);
@@ -87,6 +88,7 @@ export class AuthController {
        console.log('Invalid token');
      }
      const accessToken = await this.jwtService.signAsync({id},{expiresIn:'60s'});
+     const user = await this.authService.findOneById(id);
       res.status(200);
     return {token:accessToken};
   }catch(e){

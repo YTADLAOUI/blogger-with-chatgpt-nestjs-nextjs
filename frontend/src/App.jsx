@@ -12,6 +12,7 @@ import Editor from './pages/editor'
 import Home from './pages/home'
 import SearchPage from './pages/searchPage'
 import NotFound from './pages/404'
+import Profile from './pages/profile'
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
         <Route path='dashboard' element={<Dashboard/>}/>
         <Route path='Home' element={<Home/>}/>
+        <Route path='profil' element={<Profile/>}/>
         <Route path='search/:query' element={<SearchPage/>}/>
         <Route path='*' element={<NotFound/>}/>
       </Route>

@@ -18,7 +18,8 @@ const dashbord = () => {
           console.log(response.data);
           if(response.status === 200){
           storeSession('user', JSON.stringify({...response.data, islogin:true}));
-          dispatch(login(JSON.parse({...response.data, islogin:true})));
+          
+          dispatch(login(response.data));
           }
       } catch (error) {
         // console.log(error.response.status)

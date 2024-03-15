@@ -4,6 +4,7 @@ import React from 'react'
 export const filterPagination = async({creation_new_arr=false,state,data,page,counteRoute,data_to_send={}}) => {
 
   let obj
+  console.log(state, "stateYZYZ")
   if(state!=null && !creation_new_arr){
     console.log('here')
     obj = {...state, results:[...state.results, ...data], page:page}

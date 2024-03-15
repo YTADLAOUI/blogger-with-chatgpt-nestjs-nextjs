@@ -82,6 +82,36 @@ export class ArticlesService {
       console.log('error',e)
     } 
   }
+  async findAutourBlogs(id,page){
+    let maxLimit = 5;
+    try {
+      const blogs = await this.articleModel
+        .find({ author: id, draft: false })
+        .populate('author',"username email and _id profile_img")
+        .sort({ createdAt: -1 })
+        .select('title des content tags banner activity comments id._id createdAt')
+        .skip((page - 1) * maxLimit)
+        .limit(maxLimit);
+
+      return blogs ;
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching articles:', error);
+      // return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+  async countArticlesAuthor(id){
+    try {
+      console.log('yabhlal',id)
+      const count = await this.articleModel.countDocuments({ author:"65bb2b207976daa7d11e5140", draft: false });
+      console.log('countYABHLAL',count)
+      return count ;
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching articles:', error);
+      // return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
     async search(tag,page){
       let maxLimit = 2;
       let findQuery = {draft: false, tags:tag};

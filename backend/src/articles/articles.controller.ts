@@ -60,6 +60,23 @@ export class ArticlesController {
   async updateArticle(@Param('id') id: string, @Body() body:any){
     return await this.articlesService.update(id,body);
   }
+  @Post('articleByAuthor')
+
+
+
+  async articleByAuthor(@Body() body:any){
+    const {author,page} = body;
+    return await this.articlesService.findAutourBlogs('65bb2b207976daa7d11e5140',page);
+  }
+  @Post('countArticlesAuthor')
+
+  async countArticlesAuthor(@Body() body:any ,@Res() res:any ){
+    const {author} = body;
+    const count = await this.articlesService.countArticlesAuthor(author);
+    return res.status(200).json({totalDocs:count})
+  }
+
+
   // @Post('deleteArticle/:id')
   // async deleteArticle(@Param('id') id: string){
   //   return await this.articlesService.delete(id);

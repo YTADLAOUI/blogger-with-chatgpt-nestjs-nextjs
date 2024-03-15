@@ -92,7 +92,7 @@ const home = () => {
         trendingBlogPost()
       }
   }, [pageState])
-  console.log(blogs, "blogs123");
+  console.log(blogs?.results, "blogs123");
   return (
     <section className='h-cover flex justify-center gap-10'>
 

@@ -17,7 +17,7 @@ export class AuthService {
     return user;
   }
   async findOneById(id: string){
-    const user = await this.userModel.findOne({ _id:id });
+    const user = await this.userModel.findOne({ _id:id }).select('username email profile_img role');
     return user;
   }
   async update(id: Types.ObjectId,options){
