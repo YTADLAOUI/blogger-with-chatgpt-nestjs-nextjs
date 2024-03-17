@@ -35,11 +35,12 @@ function App() {
     <>
     <Routes>
       <Route path='/editor' element={<Editor/>}/>
+      <Route path='/editor/:id' element={<Editor/>}/>
       <Route path='/' element={<Navbar user={user}/>} >
+        <Route index element={<Home/>}/>
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
         <Route path='dashboard' element={<Dashboard/>}/>
-        <Route path='Home' element={<Home/>}/>
         <Route path='profil' element={<Profile/>}/>
         <Route path='search/:query' element={<SearchPage/>}/>
         <Route path='*' element={<NotFound/>}/>

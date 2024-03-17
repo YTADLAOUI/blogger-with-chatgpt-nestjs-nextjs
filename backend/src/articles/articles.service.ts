@@ -72,9 +72,10 @@ export class ArticlesService {
     }
   }
 
-  async findOne(id){
+  async findOne(id,edit){
     try {
-    let incrmentVal = 1;
+
+    let incrmentVal = edit !=='edit'? 1 : 0;
 
     return await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name _id username email profile_img createdAt").select('title des banner content tags activity comments id._id createdAt')
     

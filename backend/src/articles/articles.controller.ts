@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors,  } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Res, UploadedFile, UseInterceptors,  } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -54,23 +54,21 @@ export class ArticlesController {
   }
   @Post('getArticle')
   async getArticle(@Body() body:any){
-    const {id} = body;
-    return await this.articlesService.findOne({ _id: id });
+    const {id,edit} = body;
+    return await this.articlesService.findOne({ _id: id },edit);
   }
-  @Post('updateArticle/:id')
-  async updateArticle(@Param('id') id: string, @Body() body:any){
-    return await this.articlesService.update(id,body);
+  @Patch('updateArticle')
+  async updateArticle( @Body() body:any){
+    console.log('body',body)
+    const {id,title,banner,content,tags,des,author} = body;
+    return await this.articlesService.update(id,{title,banner,content,tags,des,author});
   }
   @Post('articleByAuthor')
-
-
-
   async articleByAuthor(@Body() body:any){
     const {author,page} = body;
     return await this.articlesService.findAutourBlogs('65bb2b207976daa7d11e5140',page);
   }
   @Post('countArticlesAuthor')
-
   async countArticlesAuthor(@Body() body:any ,@Res() res:any ){
     const {author} = body;
     const count = await this.articlesService.countArticlesAuthor(author);

@@ -94,8 +94,7 @@ console.log(blog.content.blocks,'yaw')
             blog.content.blocks.map((block, index) => {
               return <div key={index} className='my-4 md:my-8'>
                 <BlogContent block={block} />
-              </div>
-            
+              </div> 
             })
           }
           </div>

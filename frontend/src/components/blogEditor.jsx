@@ -14,6 +14,7 @@ const blogEditor = () => {
   const blog=useSelector(state=>state.blog.value)
   const {title,banner,content,tags,des,author}=blog
   // const textEditor=useSelector(state=>state.blog.textEditor)
+
   const [data,setData]=useState({})
   console.log(blog,'blog')
 
@@ -23,7 +24,7 @@ const blogEditor = () => {
 
         const editor = new EditorJS({
           holderId: "textEditor",
-          data: content,
+          data: Array.isArray(content)?content[0]:content,
           tools: tools,
           placeholder: 'Start Writing your blog'
         });

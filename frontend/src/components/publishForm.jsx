@@ -4,7 +4,7 @@ import { editBlog, setEditorState } from '../features/editSlice'
 import Tag from './tags'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-const publishForm = () => {
+const publishForm = ({id}) => {
   const dispatch=useDispatch()
   const blog=useSelector(state=>state.blog.value)
 const {title,banner,content,tags,des,author}=blog
@@ -41,22 +41,49 @@ const tagLimit=9
             e.target.value=""
       }
   }
+ const updatData=async()=>{
+    try {
+      if(!des){ 
+        return  toast.error('please add description')
+       }
+       if(!tags.length){
+        return  toast.error('please add tags')
+       }
+       if(!banner){
+        return toast.error('please add banner')
+       }
+         
+ 
+     const loadingToastId = toast.loading('Update article...', { autoClose: false });
 
+      const  response =await axios.patch('http://localhost:3000/api/updateArticle',{id,...blog},{
+        headers:{
+          'Content-Type': 'application/json',
+          'withCredentials': true,
+        }
+      })
+      console.log(response.data, "response")
+
+
+    }catch (error) {
+      console.log(error)
+    }
+  }
   const storeData=async()=>{
 
     try {
       if(!title){
-        toast.error('please add title')
+      return  toast.error('please add title')
         
       }
       if(!des){ 
-        toast.error('please add description')
+       return  toast.error('please add description')
       }
       if(!tags.length){
-        toast.error('please add tags')
+       return  toast.error('please add tags')
       }
       if(!banner){
-        toast.error('please add banner')
+       return toast.error('please add banner')
       }
         
 
@@ -65,10 +92,8 @@ const tagLimit=9
     {
       withCredentials: true,
     });
-    console.log(response.data,'response')
     toast.dismiss(loadingToastId);
     toast.success('article saved successfully')
-    // dispatch(editBlog({title:'',banner:'',content:[],tags:[],des:'',author:{username:'',id:''}}))
   }
     catch (error) {
       console.log(error)
@@ -77,6 +102,7 @@ const tagLimit=9
     }
     
   }
+
   return (
   
     <section className='w-screen min-h-screen grid items-center lg:grid-cols-2 py-16 lg:gap'>
@@ -128,7 +154,11 @@ const tagLimit=9
           {tagLimit-tags.length }
            tags left
         </p>
-          <button className='btn-dark px-8' onClick={()=>storeData()}>Publish</button>
+         {
+          !id?
+           <button className='btn-dark px-8' onClick={()=>storeData()}>Publish</button>:
+            <button className='btn-light px-8' onClick={()=>updatData()}>Save Draft</button>
+         }
       </div>
     </section>
   )
