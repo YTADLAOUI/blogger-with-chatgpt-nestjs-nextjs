@@ -33,6 +33,7 @@ const blog = () => {
   const [blog, setBlog] = useState(blogStructure)
 const [loading, setLoading] = useState(true)
 const [similarBlogs,setSimilarBlogs]= useState(null)
+console.log(blog.content.blocks,'yaw')
   useEffect(() => {
    (
    async () => {
@@ -89,8 +90,8 @@ const [similarBlogs,setSimilarBlogs]= useState(null)
       <BlogAffichage blog={blog} />
 
         <div className='my-12 font-gelasio blog-page-content'>
-          {
-            blog.content[0].blocks.map((block, index) => {
+        {
+            blog.content.blocks.map((block, index) => {
               return <div key={index} className='my-4 md:my-8'>
                 <BlogContent block={block} />
               </div>
@@ -100,6 +101,7 @@ const [similarBlogs,setSimilarBlogs]= useState(null)
           </div>
 
       <BlogAffichage blog={blog} />
+      
       {
         similarBlogs && similarBlogs.length ?
         <>
@@ -109,9 +111,7 @@ const [similarBlogs,setSimilarBlogs]= useState(null)
             return <BlogPostCard content={blog} author={blog.author} />
           })
         }
-
         </> : ""
-        
       }
      </div>
      

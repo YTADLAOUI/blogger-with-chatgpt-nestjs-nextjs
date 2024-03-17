@@ -5,6 +5,11 @@ import Quote from '@editorjs/quote'
 import List from '@editorjs/list'
 import Marker from '@editorjs/marker'
 import InlineCode from '@editorjs/inline-code'
+import ImageTool from '@editorjs/image';
+
+// or if you inject ImageTool via standalone script
+// let ImageTool = window.ImageTool;
+
 
 export const tools={
   embed:Embed,
@@ -12,7 +17,6 @@ export const tools={
     class:List,
     inlineToolbar:true
   },
-  image:Image,
   header:{
     class:Header,
     config:{

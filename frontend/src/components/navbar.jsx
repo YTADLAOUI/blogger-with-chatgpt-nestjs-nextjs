@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getSession } from '../common/session'
 
 const navbar = ({user}) => {
+  const navigation = useNavigate()
   const [searchBoxVisible, setSearchBoxVisible] = useState(false)
   const [userPanelVisible, setUserPanelVisible] = useState(false)
   let navigate =useNavigate()
@@ -19,6 +20,7 @@ const navbar = ({user}) => {
     }
   }
 
+// navigation('home')
 
   return (
   <>

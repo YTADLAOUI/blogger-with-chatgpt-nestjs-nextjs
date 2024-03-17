@@ -35,7 +35,7 @@ function App() {
     <>
     <Routes>
       <Route path='/editor' element={<Editor/>}/>
-      <Route path='/' element={<Navbar user={user}/>}>
+      <Route path='/' element={<Navbar user={user}/>} >
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
         <Route path='dashboard' element={<Dashboard/>}/>

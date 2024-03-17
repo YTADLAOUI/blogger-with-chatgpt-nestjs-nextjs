@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 const blogPostCard = ({content,author}) => {
   let {title,des,createdAt,tags,banner,activity:{total_like},_id} = content
   let {username} = author
+  console.log(content, "content")
   return (
   <Link to={`/blog/${_id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4'>
     <div className='w-full'>

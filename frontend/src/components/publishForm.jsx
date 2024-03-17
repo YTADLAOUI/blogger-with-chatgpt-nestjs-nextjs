@@ -68,7 +68,7 @@ const tagLimit=9
     console.log(response.data,'response')
     toast.dismiss(loadingToastId);
     toast.success('article saved successfully')
-    dispatch(editBlog({title:'',banner:'',content:[],tags:[],des:'',author:{username:'',id:''}}))
+    // dispatch(editBlog({title:'',banner:'',content:[],tags:[],des:'',author:{username:'',id:''}}))
   }
     catch (error) {
       console.log(error)
