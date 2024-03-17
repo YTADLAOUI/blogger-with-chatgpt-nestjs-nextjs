@@ -13,6 +13,7 @@ import Home from './pages/home'
 import SearchPage from './pages/searchPage'
 import NotFound from './pages/404'
 import Profile from './pages/profile'
+import Blog from './pages/blog'
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
         <Route path='profil' element={<Profile/>}/>
         <Route path='search/:query' element={<SearchPage/>}/>
         <Route path='*' element={<NotFound/>}/>
+        <Route path='blog/:id' element={<Blog/>}/>
       </Route>
   
     </Routes>

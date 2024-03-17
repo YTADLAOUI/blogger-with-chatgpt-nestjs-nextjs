@@ -10,7 +10,10 @@ const initialState = {
    des: '',
    author:{
      username: '',
-     id: ''
+      _id: '',
+      email: '',
+      profile_img: ''
+
    }
   },
   textEditor:{isReady:false},

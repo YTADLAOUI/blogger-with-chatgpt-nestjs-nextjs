@@ -52,8 +52,9 @@ export class ArticlesController {
     console.log('count',count)
     return res.status(200).json({totalDocs:count});
   }
-  @Get('getArticle/:id')
-  async getArticle(@Param('id') id: string){
+  @Post('getArticle')
+  async getArticle(@Body() body:any){
+    const {id} = body;
     return await this.articlesService.findOne({ _id: id });
   }
   @Post('updateArticle/:id')

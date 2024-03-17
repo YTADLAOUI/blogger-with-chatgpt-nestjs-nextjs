@@ -21,7 +21,7 @@ export class ArticlesService {
       let maxLimit = 5;
       const blogs = await this.articleModel
         .find({ draft: false })
-        .populate('author',"username email _id")
+        .populate('author',"username email _id profile_img")
         .sort({ createdAt: -1 })
         .skip((page - 1) * maxLimit)
         .select('title des content tags banner activity comments id._id createdAt')
@@ -59,7 +59,7 @@ export class ArticlesService {
       let maxLimit = 5;
       const blogs = await this.articleModel
         .find({ draft: false })
-        .populate('author',"username email and _id")
+        .populate('author',"username email and _id profile_img")
         .sort({"activity.total_read":-1, "activity.total_likes":-1,"createdAt": -1 })
         .select('blog_id title des content tags banner activity comments id._id createdAt')
         .limit(maxLimit);
@@ -76,7 +76,7 @@ export class ArticlesService {
     try {
     let incrmentVal = 1;
 
-    return await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name email").select('title des content tags activity comments id._id')
+    return await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name _id username email profile_img createdAt").select('title des banner content tags activity comments id._id createdAt')
     
         }catch(e){
       console.log('error',e)
@@ -119,7 +119,7 @@ export class ArticlesService {
         
         const blogs = await this.articleModel
           .find(findQuery)
-          .populate('author',"username email and _id")
+          .populate('author',"username email and _id profile_img")
           .sort({ createdAt: -1 })
           .select('title des content tags banner activity comments id._id createdAt')
           .skip((page - 1) * maxLimit)
