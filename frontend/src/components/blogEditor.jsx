@@ -8,6 +8,7 @@ import EditorJS from '@editorjs/editorjs'
 import { tools } from './toolsEditor'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+// import { handleTokenRefresh } from '../common/refrchToken'
 const blogEditor = () => {
   let blogBanner=useRef()
   const dispatch=useDispatch()
@@ -67,6 +68,33 @@ const blogEditor = () => {
         }
       }
     } catch (error) {
+      if(error.response.status === 401){
+        handleTokenRefresh();
+        let img = e.target.files[0];
+
+      if (img) {
+        const formData = new FormData();
+        formData.append('banner', img);
+
+        const loadingToastId = toast.loading('Uploading image...', { autoClose: false });
+
+        const response = await axios.post('http://localhost:3000/api/uploadImage', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        });
+
+        toast.dismiss(loadingToastId);
+
+        dispatch(editBlog({ ...blog, banner: response.data }));
+
+        if (blogBanner.current) {
+          blogBanner.current.src = response.data;
+        }
+      }
+      return
+      }
       console.error('Error uploading image:', error);
 
       toast.error('Failed to upload image. Please try again.');

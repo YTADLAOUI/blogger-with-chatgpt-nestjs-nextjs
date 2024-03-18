@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { extname } from 'path';
 import { NotificationsService } from 'src/notifications/notifications.service';
-
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class ArticlesService {
@@ -160,16 +160,19 @@ export class ArticlesService {
   }
 
   async likeArticle(id_blog,isLike){
-    console.log(isLike,'isLike')
-    let increment = !isLike ? 1 : -1;
-    console.log('increment',increment)
+    console.log(isLike,'isLikeamine')
+
+    let increment =  isLike ? 1 : -1;
+
     let user_id = "65eacd07e743403f49b1b1a9";
     try {
      const blog= await this.articleModel.findOneAndUpdate({_id:id_blog},{$inc:{"activity.total_likes":increment}});
      console.log('blog',blog.author, blog.author.toString())
     let author_string = blog.author.toString()
-    if(isLike==true){
-      await this.notificationService.removeNotification({type:"like",article:id_blog,user:user_id});
+    console.log('here')
+    if(!isLike===true){
+      console.log('delete')
+     return await this.notificationService.removeNotification({type:"like",article:id_blog,user:user_id});
       }
     await this.notificationService.saveNotification({
           type: "like", 
@@ -184,8 +187,8 @@ export class ArticlesService {
 
 
   }
-    // async delete(id: string){
-    //   return await this.articleModel.deleteOne({ _id: id });
-    // }
+    async delete(id: string): Promise<DeleteResult>{
+      return await this.articleModel.deleteOne({ _id: id });
+    }
 
 }

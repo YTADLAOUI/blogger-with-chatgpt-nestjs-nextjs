@@ -1,7 +1,16 @@
+import axios from 'axios'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const userPanel = () => {
+const navigate = useNavigate();
+  const logout =async () => {
+    await axios.post('http://localhost:3000/api/logout', {}, {withCredentials: true, headers: {
+      'Content-Type': 'application/json'
+    }})
+    localStorage.removeItem('user')
+   navigate('/signin')
+  }
   const username = 'username'
   return (
     <div className='bg-white absolute right-0 border border-grey w-60 overflow-hidden duration-200'>
@@ -22,7 +31,7 @@ const userPanel = () => {
         <span className='absolute border-t border-t border-grey w-[100%]'>
           </span>
           <button className='text-left p-4 hover:bg-grey w-full pl-8 py-4'>
-            <h1 className='font-bold text-xl mg-1'>Sign Out</h1>
+            <h1 className='font-bold text-xl mg-1' onClick={logout}>Sign Out</h1>
           </button>
 
     </div>

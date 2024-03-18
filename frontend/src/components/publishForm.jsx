@@ -56,7 +56,7 @@ const tagLimit=9
  
      const loadingToastId = toast.loading('Update article...', { autoClose: false });
 
-      const  response =await axios.patch('http://localhost:3000/api/updateArticle',{id,...blog},{
+      const  response =await axios.patch('http://localhost:3000/api/updateArticle',{_id:id,...blog},{
         headers:{
           'Content-Type': 'application/json',
           'withCredentials': true,

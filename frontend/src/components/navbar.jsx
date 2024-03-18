@@ -5,13 +5,13 @@ import UserPanel from './userPanel'
 import { useSelector, useDispatch } from 'react-redux'
 import { getSession } from '../common/session'
 
-const navbar = ({user}) => {
+const navbar = () => {
   const navigation = useNavigate()
   const [searchBoxVisible, setSearchBoxVisible] = useState(false)
   const [userPanelVisible, setUserPanelVisible] = useState(false)
   let navigate =useNavigate()
   const data=useSelector(state => state.auth.user);
-
+  console.log("fff", data)
   const handleSearch=(e)=>{
     let query = e.target.value
     console.log(e.keyCode, query)
@@ -20,7 +20,7 @@ const navbar = ({user}) => {
     }
   }
 
-// navigation('home')
+
 
   return (
   <>
@@ -53,7 +53,7 @@ const navbar = ({user}) => {
         </Link>
         <div className="relative" onClick={()=>setUserPanelVisible((curr)=>!curr)}>
           <button className='w-12 h-12 rounded-full'>
-            <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" alt="profile" className="w-full h-full object-cover rounded-full"/>
+            <img src={data.profile_img} alt="profile" className="w-full h-full object-cover rounded-full"/>
           </button>
            {
               userPanelVisible?

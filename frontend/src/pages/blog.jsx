@@ -34,7 +34,7 @@ const blog = () => {
 const [loading, setLoading] = useState(true)
 const [similarBlogs,setSimilarBlogs]= useState(null)
 const [isLike, setIsLike] = useState(false)
-console.log(blog.content.blocks,'yaw')
+
   useEffect(() => {
    (
    async () => {
@@ -89,7 +89,7 @@ console.log(blog.content.blocks,'yaw')
         </p>
       </div>
 
-      <BlogAffichage blog={blog} />
+      {/* <BlogAffichage blog={blog} islike={isLike} /> */}
 
         <div className='my-12 font-gelasio blog-page-content'>
         {

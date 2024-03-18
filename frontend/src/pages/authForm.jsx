@@ -4,6 +4,9 @@ import google from '../assets/google.png'
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { storeSession } from '../common/session';
+import { login } from '../features/authSlice';
 
 const authForm = ({page}) => {
   const [username, setUsername] = useState('')
@@ -11,6 +14,7 @@ const authForm = ({page}) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [redrict, setRedrict] = useState(false)
+  const dispatch = useDispatch()
   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   let passwordRegex = /^(?=.*[A-Z]).{8,}$/;
   const submit = (e) => {
@@ -30,6 +34,7 @@ const authForm = ({page}) => {
     if(page==="sign-in"){
       (
         async () => {
+          try {
           const {data} = await axios.post('http://localhost:3000/api/login', {
                     email: email,
                     password: password
@@ -39,9 +44,21 @@ const authForm = ({page}) => {
                     },
                     withCredentials: true
                   });
+
+                  if(data.status === 400){
+                    return toast.error(data.message)
+                  }
                   axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-                  setRedrict(true)
+                  console.log(data, "data")
+                  storeSession('user', JSON.stringify({...data.user, islogin:true}));
+                     dispatch(login(data.user));
+                     setRedrict(true)
                 }
+              catch (error) {
+                console.log(error)
+                toast.error("An error occured")
+              }
+            }
       )()     
       
     }else{    

@@ -53,15 +53,15 @@ export class AuthController {
     });
     res.status(200);
     res.cookie('refreshToken',refreshToken,{httpOnly:true,maxAge:7*24*60*60*1000});
-
-    return {token:accessToken}
+    const obj = { username: user.username, email: user.email, profile_img: user.profile_img, role: user.role, id: user._id};
+    return {token:accessToken,user:obj}
   }
   @Get('user')
    async user(@Req() req:Request ,@Res({passthrough:true}) res:Response){ 
     try{
       // console.log(req.headers['authorization'].replace('Bearer ',''));
       if(!req.headers['authorization']){
-        res.status(401);
+        res.status(403);
         return {message:"No token found"}
       }
     const accessToken = req.headers['authorization'].replace('Bearer ','');
@@ -95,13 +95,13 @@ export class AuthController {
     console.log('Invalid token');
   }
   }
-  // @Post('logout')
-  // async logout(@Req() req:Request,@Res({passthrough:true}) res:Response){
-
-  //   const refreshToken =req.cookies['refreshToken'];
-  //   await this.tokenService.delete({token:refreshToken});
-  //   res.clearCookie('refreshToken');
-  //   return {message:"Logged out"};
-  // }
+  @Post('logout')
+  async logout(@Req() req:Request,@Res({passthrough:true}) res:Response){
+    const refreshToken =req.cookies['refreshToken'];
+    console.log('refreshToken',refreshToken)
+    await this.tokenService.delete({token:refreshToken});
+    res.clearCookie('refreshToken');
+    return {message:"Logged out"};
+  }
   
 }

@@ -1,17 +1,25 @@
-import { Body, Controller, Get, Param, Patch, Post, Res, UploadedFile, UseInterceptors,  } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, Res, UploadedFile, UseInterceptors,  } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('')
 export class ArticlesController {
   constructor(
     private readonly articlesService: ArticlesService,
+    private jwtService:JwtService
     
   ) {}
   @Post('saveArticle')
-  async saveArticle(@Body() body:any){
+  async saveArticle(@Body() body:any ,@Req() req:Request ,@Res({passthrough:true}) res:Response){
     console.log('body',body)
+          // if(!req.headers['authorization']){
+           
+          //      return {error: 'No token found'};
+          // }
+          // const accessToken = req.headers['authorization'].replace('Bearer ','');
+          // const {id} = await this.jwtService.verifyAsync(accessToken);
         if(!body.title || !body.des || !body.content || !body.tags || !body.author){
               return {error: 'All fields are required'};
         }
@@ -58,10 +66,15 @@ export class ArticlesController {
     return await this.articlesService.findOne({ _id: id },edit);
   }
   @Patch('updateArticle')
-  async updateArticle( @Body() body:any){
+  async updateArticle( @Body() body:any,@Req() req:Request ,@Res({passthrough:true}) res:Response){
     console.log('body',body)
-    const {id,title,banner,content,tags,des,author} = body;
-    return await this.articlesService.update(id,{title,banner,content,tags,des,author});
+  //   if(!req.headers['authorization']){
+  //     return {error: 'No token found'};
+  //   }
+  // const accessToken = req.headers['authorization'].replace('Bearer ','');
+  // const {id} = await this.jwtService.verifyAsync(accessToken);
+    const {_id,title,banner,content,tags,des,author} = body;
+    return await this.articlesService.update(_id,{title,banner,content,tags,des,author});
   }
   @Post('articleByAuthor')
   async articleByAuthor(@Body() body:any){
@@ -76,14 +89,18 @@ export class ArticlesController {
   }
 
   @Post('likeArticle')
-  async likeArticle(@Body() body:any){
+  async likeArticle(@Body() body:any,@Req() req:Request ,@Res({passthrough:true}) res:Response){
     const {id_blog,isLike} = body;
-    
+    if(!req.headers['authorization']){
+      return {error:"No token found"}
+    }
+  const accessToken = req.headers['authorization'].replace('Bearer ','');
+  const {id} = await this.jwtService.verifyAsync(accessToken);
     return await this.articlesService.likeArticle(id_blog,isLike);
   }
 
-  // @Post('deleteArticle/:id')
-  // async deleteArticle(@Param('id') id: string){
-  //   return await this.articlesService.delete(id);
-  // }
+  @Post('deleteArticle/:id')
+  async deleteArticle(@Param('id') id: string) {
+    return await this.articlesService.delete(id);
+  }
 }

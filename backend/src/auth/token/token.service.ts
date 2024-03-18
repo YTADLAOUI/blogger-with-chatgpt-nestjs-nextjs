@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Token } from '../models/token.schema';
 import { Model } from 'mongoose';
-
+import { DeleteResult } from 'mongodb';
 @Injectable()
 export class TokenService {
   constructor(@InjectModel(Token.name) private tokenModel: Model<Token>) {}
@@ -17,8 +17,8 @@ export class TokenService {
     const Token = await this.tokenModel.findOne(options);
     return Token;
   }
-  // async delete(options){
-  //   const Token = await this.tokenModel.deleteOne(options);
-  //   return Token;
-  // }
+  async delete(options):Promise<DeleteResult>{
+    const Token = await this.tokenModel.deleteOne(options);
+    return Token;
+  }
 }

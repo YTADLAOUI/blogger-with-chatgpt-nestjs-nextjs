@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from './models/user.schema';
+
 @Injectable()
 export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -23,4 +24,5 @@ export class AuthService {
   async update(id: Types.ObjectId,options){
     return await this.userModel.updateOne({ _id: id },options);
   }
+  
 }

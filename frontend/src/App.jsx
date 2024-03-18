@@ -17,7 +17,7 @@ import Blog from './pages/blog'
 
 function App() {
 
-    const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null)
   const dispatch = useDispatch()
 
 
@@ -34,14 +34,27 @@ function App() {
   return (
     <>
     <Routes>
-      <Route path='/editor' element={<Editor/>}/>
-      <Route path='/editor/:id' element={<Editor/>}/>
-      <Route path='/' element={<Navbar user={user}/>} >
+      <Route path='/editor' element={
+        <AuthMidd>
+          <Editor/>
+        </AuthMidd>
+      }/>
+      <Route path='/editor/:id' element={
+         <AuthMidd>
+          <Editor/>
+        </AuthMidd>}/>
+      <Route path='/' element={<Navbar/>} >
         <Route index element={<Home/>}/>
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
-        <Route path='dashboard' element={<Dashboard/>}/>
-        <Route path='profil' element={<Profile/>}/>
+        <Route path='dashboard' element={
+          <AuthMidd>
+            <Dashboard/>
+          </AuthMidd>
+        }/>
+        <Route path='profil' element={
+            <Profile/>
+        }/>
         <Route path='search/:query' element={<SearchPage/>}/>
         <Route path='*' element={<NotFound/>}/>
         <Route path='blog/:id' element={<Blog/>}/>
