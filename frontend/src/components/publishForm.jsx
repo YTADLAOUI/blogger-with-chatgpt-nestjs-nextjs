@@ -157,7 +157,7 @@ const tagLimit=9
          {
           !id?
            <button className='btn-dark px-8' onClick={()=>storeData()}>Publish</button>:
-            <button className='btn-light px-8' onClick={()=>updatData()}>Save Draft</button>
+            <button className='btn-light px-8' onClick={()=>updatData()}>Update</button>
          }
       </div>
     </section>

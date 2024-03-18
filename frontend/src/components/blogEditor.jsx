@@ -12,31 +12,29 @@ const blogEditor = () => {
   let blogBanner=useRef()
   const dispatch=useDispatch()
   const blog=useSelector(state=>state.blog.value)
+
+  console.log(blog,"data")
   const {title,banner,content,tags,des,author}=blog
   // const textEditor=useSelector(state=>state.blog.textEditor)
-
   const [data,setData]=useState({})
-  console.log(blog,'blog')
-
-  useEffect(() => {
-    const initializeEditor = async () => {
+ useEffect(() => {
+  const initializeEditor = async () => {
       try {
+          const editor = new EditorJS({
+              holderId: "textEditor",
+              data: Array.isArray(content) ? content[0] : content,
+              tools: tools,
+              placeholder: 'Start Writing your blog'
+          });
 
-        const editor = new EditorJS({
-          holderId: "textEditor",
-          data: Array.isArray(content)?content[0]:content,
-          tools: tools,
-          placeholder: 'Start Writing your blog'
-        });
-        setData(editor)
-
+          setData(editor);
       } catch (error) {
-        console.error('Error initializing EditorJS:', error);
+          console.error('Error initializing EditorJS:', error);
       }
-    };
-  
-    initializeEditor();
-  }, []);
+  };
+
+  initializeEditor();
+}, []);
   const handleTitle = (e) => {
    let input= e.target
    input.style.height='auto'
@@ -60,8 +58,6 @@ const blogEditor = () => {
           withCredentials: true,
         });
 
-        console.log(response.data, 'response');
-
         toast.dismiss(loadingToastId);
 
         dispatch(editBlog({ ...blog, banner: response.data }));
@@ -77,16 +73,14 @@ const blogEditor = () => {
     }
   };
   const handlePublish=()=>{
-    console.log('first')
+    
     if(!title.length){
 
       return toast.error("write blog title to publish it")
     }
-    console.log(data)
     data.save().then(
       (out)=>{
         if(out.blocks.length){
-        console.log(out,'gfdge')
       dispatch(editBlog({...blog,content:out}))
         dispatch(setEditorState('publish'))
           }else{

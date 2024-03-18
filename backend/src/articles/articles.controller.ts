@@ -75,6 +75,12 @@ export class ArticlesController {
     return res.status(200).json({totalDocs:count})
   }
 
+  @Post('likeArticle')
+  async likeArticle(@Body() body:any){
+    const {id_blog,isLike} = body;
+    
+    return await this.articlesService.likeArticle(id_blog,isLike);
+  }
 
   // @Post('deleteArticle/:id')
   // async deleteArticle(@Param('id') id: string){

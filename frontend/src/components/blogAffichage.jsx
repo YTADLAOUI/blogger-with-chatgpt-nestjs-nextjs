@@ -1,18 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { getSession } from '../common/session'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
-const blogAffichage = ({blog}) => {
+const blogAffichage = ({blog,islike}) => {
   let user= getSession('user')
    user= JSON.parse(user)
-  console.log(blog, "blog")
+   console.log(islike, "islike")
+   const [like, setLike] = useState(islike)
+   
+ const handlLike=async()=>{
+    // setLike(islike)
+    setLike(like=>!like)
+ 
+    !like?blog.activity.total_likes--:blog.activity.total_likes++
+    try {
+         const res=  await axios.post('http://localhost:3000/api/likeArticle', {id_blog:blog._id,isLike:like}, {headers: {
+        'Content-Type': 'application/json',
+        'withCredentials': true,
+      }});
+  
+    } catch (error) {
+      console.log(error)
+    }
+
+ }
   return (
     <>
     <hr className="border-grey my-2"/>
     <div className= "flex gap-6 justify-between">
       <div className='flex gap-3 items-center'>
        
-        <button className=' w-10 h-10 rounded-full flex items-center justify-center bg-grey/80'>
+        <button className={' w-10 h-10 rounded-full flex items-center justify-center bg-grey/80 ' + (!like?'bg-red/20 text-red' : 'bg-grey/80') } onClick={handlLike}>
         <i className='fi fi-rr-heart'></i>
         </button>
         <p className='text-xl text-dark-grey'>{blog.activity.total_likes}</p>
@@ -33,10 +52,7 @@ const blogAffichage = ({blog}) => {
           } */}
           <Link to={`/editor/${blog._id}`} className='underline '>Edit</Link> 
         </div>
-          
-
     </div>
-
     <hr className="border-grey my-2"/>
     </>
   )

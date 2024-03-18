@@ -9,40 +9,43 @@ import { editBlog, setEditorState } from '../features/editSlice'
 const editor = () => {
   const dispatch=useDispatch()
  const editor =useSelector(state=>state.blog.editorState)
+  console.log(editor)
  let {id}=useParams();
  const [loading, setLoading] = useState(true)
  useEffect(() => {
   if(!id){
-    setLoading(false)
+   return setLoading(false)
   }
-  (
-    async()=>{
-   try {
-    const res= await axios.post('http://localhost:3000/api/getArticle', {id,edit:'edit'}, {
-      headers: {
-        'Content-Type': 'application/json',
-        'withCredentials': true,
-      }   
-    })
-    
-    dispatch(editBlog(res.data))
-
-    setLoading(false) 
-  } catch (error) {
-    console.log(error)
-     dispatch(editBlog(null))
-   }
-
-    }
-  )()
+    (
+      async()=>{
+        console.log(id)
+     try {
+      const res= await axios.post('http://localhost:3000/api/getArticle', {id,edit:'edit'}, {
+        headers: {
+          'Content-Type': 'application/json',
+          'withCredentials': true,
+        }   
+      })
+      console.log(res.data, "res")
+      dispatch(editBlog(res.data.blog))
+  
+      setLoading(false) 
+    } catch (error) {
+      console.log(error)
+       dispatch(editBlog(null))
+     }
+  
+      }
+    )()
+  
  }, [])
 
   return (
     <div>
      {
-      loading?<Loader/>:
-       editor==='editor'?
-       <EditorBloger/>:
+      loading ? <Loader/> :
+       editor ==='editor' ?
+        <EditorBloger/> :
         <PublishForm id={id}/>
      } 
     </div>

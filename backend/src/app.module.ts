@@ -9,6 +9,7 @@ import { OpenaiModule } from './openAi/openai.module';
 import { ArticlesModule } from './articles/articles.module';
 import { CommentsModule } from './comments/comments.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { NotificationsModule } from './notifications/notifications.module';
 @Module({
   imports: [AuthModule,ResetModule,OpenaiModule,MongooseModule.forRootAsync({
     useFactory: () => ({
@@ -19,7 +20,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
   ConfigModule.forRoot(),
   ArticlesModule,
   CommentsModule,
-  CloudinaryModule
+  CloudinaryModule,
+  NotificationsModule
 ],
   controllers: [AppController],
   providers: [AppService],

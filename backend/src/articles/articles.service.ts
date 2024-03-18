@@ -1,15 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Article } from './models/article.schema';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { extname } from 'path';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 
 @Injectable()
 export class ArticlesService {
 
-  constructor(@InjectModel(Article.name) private articleModel:Model<Article>,private readonly cloudinaryService: CloudinaryService ) {}
+  constructor(@InjectModel(Article.name) private articleModel:Model<Article>,private readonly cloudinaryService: CloudinaryService,private readonly notificationService:NotificationsService) {}
   async save(body:any){
     const createdArticle= new this.articleModel(body);
     await createdArticle.save();
@@ -74,11 +75,14 @@ export class ArticlesService {
 
   async findOne(id,edit){
     try {
-
+      let user_id = "65eacd07e743403f49b1b1a9";
+      console.log('id',id)
+      const isLike= !await this.notificationService.findOne({article:id._id,user:user_id,type:"like"})
+      console.log('isLike',isLike)
     let incrmentVal = edit !=='edit'? 1 : 0;
+    const blog = await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name _id username email profile_img createdAt").select('title des banner content tags activity comments id._id createdAt author')
 
-    return await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name _id username email profile_img createdAt").select('title des banner content tags activity comments id._id createdAt')
-    
+    return {blog,isLike};
         }catch(e){
       console.log('error',e)
     } 
@@ -153,6 +157,32 @@ export class ArticlesService {
     });
     console.log(result);
     return result.url;
+  }
+
+  async likeArticle(id_blog,isLike){
+    console.log(isLike,'isLike')
+    let increment = !isLike ? 1 : -1;
+    console.log('increment',increment)
+    let user_id = "65eacd07e743403f49b1b1a9";
+    try {
+     const blog= await this.articleModel.findOneAndUpdate({_id:id_blog},{$inc:{"activity.total_likes":increment}});
+     console.log('blog',blog.author, blog.author.toString())
+    let author_string = blog.author.toString()
+    if(isLike==true){
+      await this.notificationService.removeNotification({type:"like",article:id_blog,user:user_id});
+      }
+    await this.notificationService.saveNotification({
+          type: "like", 
+          article: id_blog, 
+          notification_for: author_string, 
+          user: user_id 
+  });
+      
+    } catch (error) {
+      console.log('error',error)
+    }
+
+
   }
     // async delete(id: string){
     //   return await this.articleModel.deleteOne({ _id: id });

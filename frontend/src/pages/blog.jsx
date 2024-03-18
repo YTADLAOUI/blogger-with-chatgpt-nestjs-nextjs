@@ -33,6 +33,7 @@ const blog = () => {
   const [blog, setBlog] = useState(blogStructure)
 const [loading, setLoading] = useState(true)
 const [similarBlogs,setSimilarBlogs]= useState(null)
+const [isLike, setIsLike] = useState(false)
 console.log(blog.content.blocks,'yaw')
   useEffect(() => {
    (
@@ -46,7 +47,7 @@ console.log(blog.content.blocks,'yaw')
           })
           console.log(response.data, "response")
           const res= await axios.post('http://localhost:3000/api/searchArticles'
-          , {tag:response.data.tags[0],page:1}, {
+          , {tag:response.data.blog.tags[0],page:1}, {
             headers: {
               'Content-Type': 'application/json',
               'withCredentials': true,
@@ -54,7 +55,8 @@ console.log(blog.content.blocks,'yaw')
           })
           console.log(res.data, "res")
           setSimilarBlogs(res.data)
-          setBlog(response.data)
+          setBlog(response.data.blog)
+          setIsLike(response.data.isLike)
           setLoading(false)
         }
         catch(error){
@@ -99,7 +101,7 @@ console.log(blog.content.blocks,'yaw')
           }
           </div>
 
-      <BlogAffichage blog={blog} />
+      <BlogAffichage blog={blog} islike={isLike}/>
       
       {
         similarBlogs && similarBlogs.length ?
