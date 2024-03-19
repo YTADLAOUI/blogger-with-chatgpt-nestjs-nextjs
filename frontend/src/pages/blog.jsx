@@ -6,6 +6,7 @@ import { getDay } from '../common/date'
 import BlogAffichage from '../components/blogAffichage'
 import BlogContent from '../components/BlogContent'
 import BlogPostCard from '../components/blogPostCard'
+import CommentaireContainer from '../components/commentaireContainer'
 export const blogStructure = {
   title:"",
   des:"",
@@ -34,6 +35,8 @@ const blog = () => {
 const [loading, setLoading] = useState(true)
 const [similarBlogs,setSimilarBlogs]= useState(null)
 const [isLike, setIsLike] = useState(false)
+const [commentWrapper, setCommentWrapper] = useState(true)
+const [totalComments, settotalComments] = useState(0)
 
   useEffect(() => {
    (
@@ -69,6 +72,14 @@ const [isLike, setIsLike] = useState(false)
     <>
     {
       loading ? <Loader/> : 
+    <>
+      <CommentaireContainer commentWrapper={commentWrapper}
+      totalComments={totalComments} 
+      blog={blog}
+      setCommentWrapper={setCommentWrapper}
+      />
+      
+   
      <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
       <img src={blog.banner} className='aspect-video' />
       <div>
@@ -101,7 +112,9 @@ const [isLike, setIsLike] = useState(false)
           }
           </div>
 
-      <BlogAffichage blog={blog} islike={isLike}/>
+      <BlogAffichage blog={blog} islike={isLike} 
+      commentWrapper={commentWrapper}
+      setCommentWrapper={setCommentWrapper}/>
       
       {
         similarBlogs && similarBlogs.length ?
@@ -115,6 +128,7 @@ const [isLike, setIsLike] = useState(false)
         </> : ""
       }
      </div>
+    </>
      
       
     }

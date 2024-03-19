@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 
 @Controller()
@@ -7,10 +7,26 @@ export class CommentsController {
 
   @Post('saveComment')
   async saveComment(@Body() body:any){
-    if(!body.article_id || !body.comment || !body.article_author || !body.commented_by ){
-
-      return {error: 'All fields are required'};
+    try{
+      if(!body.article_id || !body.comment || !body.article_author || !body.commented_by ){
+  
+        return {error: 'All fields are required'};
+      }
+      return await this.commentsService.save(body);
+    }catch(e){
+      return {error: e.message};
     }
-    return await this.commentsService.save(body);
+  }
+  @Post('getComments')
+  async getComments(@Body() body:any){
+    try{
+      console.log(body,'bodyyyyyyyyyyyyyy');
+      if(!body.article_id){
+        return {error: 'Article id is required'};
+      }
+      return await this.commentsService.findAll(body);
+    }catch(e){
+      return {error: e.message};
+    }
   }
 }

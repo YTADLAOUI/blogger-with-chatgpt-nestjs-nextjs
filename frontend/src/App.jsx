@@ -35,22 +35,23 @@ function App() {
     <>
     <Routes>
       <Route path='/editor' element={
-        <AuthMidd>
+        // <AuthMidd>
           <Editor/>
-        </AuthMidd>
+        // </AuthMidd>
       }/>
       <Route path='/editor/:id' element={
-         <AuthMidd>
+        //  <AuthMidd>
           <Editor/>
-        </AuthMidd>}/>
+        // </AuthMidd>
+      }/>
       <Route path='/' element={<Navbar/>} >
         <Route index element={<Home/>}/>
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
         <Route path='dashboard' element={
-          <AuthMidd>
+          // <AuthMidd>
             <Dashboard/>
-          </AuthMidd>
+          // </AuthMidd>
         }/>
         <Route path='profil' element={
             <Profile/>

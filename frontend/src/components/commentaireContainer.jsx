@@ -1,0 +1,59 @@
+import React, { useEffect, useState } from 'react'
+import CommentField from './commentField'
+import NodataMessage from './noDataMessage'
+import axios from 'axios'
+const commentaireContainer = ({commentWrapper,totalComments,blog ,setCommentWrapper}) => {
+  console.log(commentWrapper, "commentWrapper")
+  const [commentsArray, setCommentsArray] = useState([])
+  useEffect(()=>{
+    (
+      async()=>{
+        try {
+          const response= await axios.post('http://localhost:3000/api/getComments', {article_id:blog._id}, {headers: {
+            'Content-Type': 'application/json',
+          }
+          ,withCredentials: true
+          })
+          console.log(response.data, "response9999999")
+          setCommentsArray(response.data)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    )()
+ }, [])
+  return (
+    <div className={'max-sm:w-full fixed '+(commentWrapper? 'top-0 sm:right-0 ':'top-[100%] sm:right-[-100%]') + ' duration-700 max-sm:right-0 sm:top-0 w-[30%] min-w-[350px] h-full z-50 bg-white shadow-2xl p-8 px-16 overflow-y-auto overflow-x-hidden'}
+    >
+      <div className='relative '>
+    <h1 className='text-xl font-medium'>Comments</h1>
+    <p className='text-lg
+    mt-2 w-[70%] text-dark-grey line-clamp-1'>{blog.title}</p>
+    <button className='absolute top-0 right-0 flex justify-center
+    items-center w-10 h-10 rounded-full bg-grey' onClick={()=>setCommentWrapper(!commentWrapper)}>
+      <i className='fi fi-rr-cross text-xl mt-1'></i> 
+    </button>
+        </div>
+      <hr className='border-grey my-8 w-[120%]-ml-10'/>
+      <CommentField blog={blog} action='comment' 
+      />
+      {
+      
+        commentsArray && commentsArray.length ?
+        commentsArray.map((comment, index)=>(
+         
+          <div key={index} className='flex gap-4 mt-8'>
+            <img src={comment.commented_by.profile_img} className='w-12 h-12 rounded-full' />
+            <div>
+              <p className='text-lg'>{comment.commented_by.username}</p>
+              <p className='text-dark-grey line-clamp-2'>{comment.comment}</p>
+            </div>
+          </div>
+        )) : <NodataMessage message='No comments yet...'/>
+      }
+    </div>
+    
+  )
+}
+
+export default commentaireContainer

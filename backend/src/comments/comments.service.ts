@@ -12,9 +12,10 @@ export class CommentsService {
     await createdComment.save();
     return createdComment;
   }
-  async findAll(){
-    return await this.commentModel.find();
+  async findAll({id_article}){
+    return await this.commentModel.find(id_article);
   }
+
   async findOne(id){
     return await this.commentModel.findOne({ _id: id });
   }

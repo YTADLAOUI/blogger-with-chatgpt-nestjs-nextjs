@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import {handleTokenRefresh} from '../common/refrchToken'
 import axios from 'axios'
 
-const blogAffichage = ({blog,islike}) => {
+const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
   let user= getSession('user')
    user= JSON.parse(user)
    console.log(islike, "islike")
@@ -54,7 +54,7 @@ const blogAffichage = ({blog,islike}) => {
         <p className='text-xl text-dark-grey'>{blog.activity.total_likes}</p>
        
        
-        <button className=' w-10 h-10 rounded-full flex items-center justify-center bg-grey/80'>
+        <button className=' w-10 h-10 rounded-full flex items-center justify-center bg-grey/80' onClick={()=>{setCommentWrapper(!commentWrapper)}}>
         <i className='fi fi-rr-comment-dots'></i>
         </button>
         <p className='text-xl text-dark-grey'>{blog.activity.total_comments}</p>
