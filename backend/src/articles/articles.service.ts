@@ -76,9 +76,7 @@ export class ArticlesService {
   async findOne(id,edit){
     try {
       let user_id = "65eacd07e743403f49b1b1a9";
-      console.log('id',id)
       const isLike= !await this.notificationService.findOne({article:id._id,user:user_id,type:"like"})
-      console.log('isLike',isLike)
     let incrmentVal = edit !=='edit'? 1 : 0;
     const blog = await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name _id username email profile_img createdAt").select('title des banner content tags activity comments id._id createdAt author')
 

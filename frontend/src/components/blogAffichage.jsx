@@ -62,12 +62,12 @@ const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
       </div>
 
         <div className='flex gap-3 items-center'>
-          {/* {
+          {
             blog.author._id === user._id ?
             <Link to={`/editor/${blog._id}`}>Edit</Link> : ""
           
-          } */}
-          <Link to={`/editor/${blog._id}`} className='underline '>Edit</Link> 
+          }
+          {/* <Link to={`/editor/${blog._id}`} className='underline '>Edit</Link>  */}
         </div>
     </div>
     <hr className="border-grey my-2"/>

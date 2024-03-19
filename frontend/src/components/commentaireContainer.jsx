@@ -3,9 +3,12 @@ import CommentField from './commentField'
 import NodataMessage from './noDataMessage'
 import axios from 'axios'
 import CommentCard from './commentCard'
+import { useSelector } from 'react-redux'
 const commentaireContainer = ({commentWrapper,totalComments,blog ,setCommentWrapper}) => {
   console.log(commentWrapper, "commentWrapper")
   const [commentsArray, setCommentsArray] = useState([])
+  const change=useSelector(state=>state.comment.value)
+  console.log(change, "change")
   useEffect(()=>{
     (
       async()=>{
@@ -15,14 +18,13 @@ const commentaireContainer = ({commentWrapper,totalComments,blog ,setCommentWrap
           }
           ,withCredentials: true
           })
-          console.log(response.data, "response9999999")
           setCommentsArray(response.data)
         } catch (error) {
           console.log(error)
         }
       }
     )()
- }, [])
+ }, [blog._id, change])
   return (
     <div className={'max-sm:w-full fixed '+(commentWrapper? 'top-0 sm:right-0 ':'top-[100%] sm:right-[-100%]') + ' duration-700 max-sm:right-0 sm:top-0 w-[30%] min-w-[350px] h-full z-50 bg-white shadow-2xl p-8 px-16 overflow-y-auto overflow-x-hidden'}
     >

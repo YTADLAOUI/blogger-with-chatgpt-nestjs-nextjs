@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import toast, { Toaster } from 'react-hot-toast';
+import { change } from '../features/commentSlice';
 const commentField = ({action,blog}) => {
   const [Comment, setComment] = useState('')
-
+  const dispatch=useDispatch()
  const user= useSelector(state=>state.auth.user)
  console.log(blog._id, "blog")
  console.log(user.id, "user")
@@ -17,7 +18,8 @@ const commentField = ({action,blog}) => {
       }
       ,withCredentials: true
       })
-      
+      dispatch(change())
+      setComment('')
     } catch (error) {
       
     }

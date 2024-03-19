@@ -7,6 +7,7 @@ import BlogAffichage from '../components/blogAffichage'
 import BlogContent from '../components/BlogContent'
 import BlogPostCard from '../components/blogPostCard'
 import CommentaireContainer from '../components/commentaireContainer'
+import { useSelector } from 'react-redux'
 export const blogStructure = {
   title:"",
   des:"",
@@ -31,13 +32,15 @@ export const blogStructure = {
 
 const blog = () => {
   let {id}= useParams()
-  const [blog, setBlog] = useState(blogStructure)
+  console.log(id, "id")
+const [blog, setBlog] = useState(blogStructure)
 const [loading, setLoading] = useState(true)
 const [similarBlogs,setSimilarBlogs]= useState(null)
 const [isLike, setIsLike] = useState(false)
 const [commentWrapper, setCommentWrapper] = useState(true)
 const [totalComments, settotalComments] = useState(0)
 
+const change=useSelector(state=>state.comment.value)
   useEffect(() => {
    (
    async () => {
@@ -67,7 +70,7 @@ const [totalComments, settotalComments] = useState(0)
 
       }
     })()
-  }, [])
+  }, [id, change])
   return (
     <>
     {

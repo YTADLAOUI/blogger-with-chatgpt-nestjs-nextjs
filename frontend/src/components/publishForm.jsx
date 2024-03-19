@@ -106,9 +106,8 @@ const tagLimit=9
   return (
   
     <section className='w-screen min-h-screen grid items-center lg:grid-cols-2 py-16 lg:gap'>
-      <div></div>
-      
-      <button className="w-15 h-12 absoulte right-[8vw] z-10 top-[5%] lg:top-[10%]"
+      <div className='flex-1'></div>
+      <button className="w-max absoulte ms-auto "
       onClick={handleCloseEvent}>
           <i className='fi fi-br-cross'></i>
       </button>

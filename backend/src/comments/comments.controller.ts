@@ -28,4 +28,15 @@ export class CommentsController {
       return {error: e.message};
     }
   }
+  @Post('deleteComment')
+  async deleteComment(@Body() body:any){
+    try{
+      if(!body.id){
+        return {error: 'Comment id is required'};
+      }
+      return await this.commentsService.delete(body.id);
+    }catch(e){
+      return {error: e.message};
+    }
+  }
 }

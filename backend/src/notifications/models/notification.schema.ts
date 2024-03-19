@@ -4,7 +4,7 @@ import { Document, HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 export type NotificationDocument = HydratedDocument<Notification>; ;
 @Schema({ timestamps: true })
 export class Notification  {
-  @Prop({ type: String, enum: ["like", "comment", "reply"], required: true })
+  @Prop({ type: String, enum: ["like", "comment"], required: true })
   type: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'Article' })
@@ -18,15 +18,6 @@ export class Notification  {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Comment' })
   comment: MongooseSchema.Types.ObjectId;
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Comment' })
-  reply: MongooseSchema.Types.ObjectId;
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Comment' })
-  replied_on_comment: MongooseSchema.Types.ObjectId;
-
-  @Prop({ type: Boolean, default: false })
-  seen: boolean;
 }
 
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

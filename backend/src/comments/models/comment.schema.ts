@@ -14,16 +14,10 @@ export class Comment{
   @Prop({ type: String, required: true })
   comment: string;
 
-  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'Comment' })
-  children: MongooseSchema.Types.ObjectId[];
-
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, ref: 'User' })
   commented_by: MongooseSchema.Types.ObjectId;
 
-  @Prop({ type: Boolean })
-  isReply: boolean;
+ 
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Comment' })
-  parent: MongooseSchema.Types.ObjectId;
 }
 export const CommentSchema = SchemaFactory.createForClass(Comment);
