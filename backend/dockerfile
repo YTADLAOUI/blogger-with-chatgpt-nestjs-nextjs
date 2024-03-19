@@ -1,0 +1,12 @@
+FROM node:alpine as development 
+# Set the working directory
+WORKDIR /usr/src/app
+# Copy package files and install dependencies
+COPY package*.json ./
+COPY . .
+RUN npm install 
+
+# Build the application
+RUN npm run build
+
+CMD ["node","dist"]
