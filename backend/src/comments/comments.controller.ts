@@ -20,7 +20,6 @@ export class CommentsController {
   @Post('getComments')
   async getComments(@Body() body:any){
     try{
-      console.log(body,'bodyyyyyyyyyyyyyy');
       if(!body.article_id){
         return {error: 'Article id is required'};
       }

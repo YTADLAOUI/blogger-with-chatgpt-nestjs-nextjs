@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CommentField from './commentField'
 import NodataMessage from './noDataMessage'
 import axios from 'axios'
+import CommentCard from './commentCard'
 const commentaireContainer = ({commentWrapper,totalComments,blog ,setCommentWrapper}) => {
   console.log(commentWrapper, "commentWrapper")
   const [commentsArray, setCommentsArray] = useState([])
@@ -42,13 +43,7 @@ const commentaireContainer = ({commentWrapper,totalComments,blog ,setCommentWrap
         commentsArray && commentsArray.length ?
         commentsArray.map((comment, index)=>(
          
-          <div key={index} className='flex gap-4 mt-8'>
-            <img src={comment.commented_by.profile_img} className='w-12 h-12 rounded-full' />
-            <div>
-              <p className='text-lg'>{comment.commented_by.username}</p>
-              <p className='text-dark-grey line-clamp-2'>{comment.comment}</p>
-            </div>
-          </div>
+          <CommentCard key={index} index={index} commentData={comment}/>
         )) : <NodataMessage message='No comments yet...'/>
       }
     </div>

@@ -13,7 +13,11 @@ export class CommentsService {
     return createdComment;
   }
   async findAll({id_article}){
-    return await this.commentModel.find(id_article);
+    let maxLimit = 5;
+    let page = 1;
+    return await this.commentModel.find(id_article).populate('commented_by','username email _id profile_img createdAt').sort({ createdAt: -1 })
+    .skip((page - 1) * maxLimit)
+    .limit(maxLimit);
   }
 
   async findOne(id){
