@@ -63,7 +63,7 @@ const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
 
         <div className='flex gap-3 items-center'>
           {
-            blog.author._id === user._id ?
+            blog.author._id === user.id ?
             <Link to={`/editor/${blog._id}`}>Edit</Link> : ""
           
           }

@@ -53,7 +53,7 @@ function App() {
             <Dashboard/>
           // </AuthMidd>
         }/>
-        <Route path='profil' element={
+        <Route path='profil/:id_user' element={
             <Profile/>
         }/>
         <Route path='search/:query' element={<SearchPage/>}/>

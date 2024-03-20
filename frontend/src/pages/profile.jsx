@@ -19,7 +19,7 @@ const profile = () => {
 const [loading, setLoading] = useState(false)
 const {bio,username,profile_img} = data
 const [blogs, setBlogs] = useState(null)
-
+const {id_user}=useParams()
 const user=getSession('user')
 const {id}=JSON.parse(user)
   const getArticles = async ({page=1}) => {
@@ -49,7 +49,7 @@ const {id}=JSON.parse(user)
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/user');
+        const response = await axios.get('http://localhost:3000/api/user/'+id_user);
 
         setData(response.data);        
           
@@ -88,9 +88,13 @@ const {id}=JSON.parse(user)
         <h1 className='text-xl capitalize h-6'>{username}</h1>
      
         <p>20000 blogs - 3000 Reads</p>
-          <div className='flex gap-5 mt-2'>
+          {
+            id_user==id ?
+            <div className='flex gap-5 mt-2'>
             <Link  to='/edit-profile' className='btn-light rounded-md'>Edit Profile</Link>
-            </div>
+            </div>:
+            ""
+          }
             <About className=" max-md:hidden items-center min-w-[250px] flex flex-col" bio={bio} />
       </div>
       <div className='max-md:mt-12 w-full'>

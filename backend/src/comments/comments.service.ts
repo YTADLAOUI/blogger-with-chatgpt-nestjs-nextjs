@@ -31,8 +31,13 @@ export class CommentsService {
     return await this.commentModel.updateOne({ _id: id },options);
   }
 
-  async delete(id): Promise<DeleteResult>{
-    return await this.commentModel.deleteOne({ _id: id });
+  async delete(body): Promise<DeleteResult>{
+    console.log("gg",body,'ggg')
+   const fn= await this.commentModel.deleteOne({ _id: body.id_comment });
+   const incr=await this.articleService.update(body.article_id,{$inc:{"activity.total_comments":-1}});
+   console.log("gg",incr,'ggg')
+   return fn;
   }
+  
 
 }

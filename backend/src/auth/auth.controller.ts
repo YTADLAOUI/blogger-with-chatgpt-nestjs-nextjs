@@ -56,18 +56,18 @@ export class AuthController {
     const obj = { username: user.username, email: user.email, profile_img: user.profile_img, role: user.role, id: user._id};
     return {token:accessToken,user:obj}
   }
-  @Get('user')
-   async user(@Req() req:Request ,@Res({passthrough:true}) res:Response){ 
+  @Get('user/:id_user')
+   async user(@Req() req:Request ,@Res({passthrough:true}) res:Response ,@Param('id_user') id_user:string){ 
     try{
       // console.log(req.headers['authorization'].replace('Bearer ',''));
-      if(!req.headers['authorization']){
-        res.status(403);
-        return {message:"No token found"}
-      }
-    const accessToken = req.headers['authorization'].replace('Bearer ','');
-    const {id} = await this.jwtService.verifyAsync(accessToken);
-    
-    const user = await this.authService.findOneById(id)
+    //   if(!req.headers['authorization']){
+    //     res.status(403);
+    //     return {message:"No token found"}
+    //   }
+    // const accessToken = req.headers['authorization'].replace('Bearer ','');
+    // const {id} = await this.jwtService.verifyAsync(accessToken);
+      console.log(id_user,"dddddddddddd")
+    const user = await this.authService.findOneById(id_user)
     const userDetails = { username: user.username, email: user.email, profile_img: user.profile_img, role: user.role, id: user._id};
     res.status(200);
       return userDetails;
