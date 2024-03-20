@@ -13,6 +13,7 @@ import NodataMessage from '../components/noDataMessage';
 import LoadMoreData from '../components/loadMoreData';
 
 
+
 const profile = () => {
   const [data, setData] = useState('');
 // console.log(data)
@@ -20,10 +21,11 @@ const [loading, setLoading] = useState(false)
 const {bio,username,profile_img} = data
 const [blogs, setBlogs] = useState(null)
 const {id_user}=useParams()
-const user=getSession('user')
-const {id}=JSON.parse(user)
+const user=JSON.parse(localStorage.getItem('user'))
+
   const getArticles = async ({page=1}) => {
-      let author=id
+      let author=id_user
+      console.log(author, "authogfqdfzefzar")
     try {
       // console.log(author, "author")
      const response= await axios.post('http://localhost:3000/api/articleByAuthor',{page,author},{
@@ -32,13 +34,13 @@ const {id}=JSON.parse(user)
           'withCredentials': true,
         }   
       })
-      // console.log(response.data, "responseLOLOLOL")
+      console.log(response.data, "responseLOLOLOL")
       let formdata = await filterPagination({
         state:blogs,
         data:response.data,
         page,
         counteRoute:"/countArticlesAuthor",
-        data_to_send:{author:id}
+        data_to_send:{author:id_user}
       })
       console.log(formdata, "formDataHere")
       setBlogs(formdata)
@@ -54,26 +56,14 @@ const {id}=JSON.parse(user)
         setData(response.data);        
           
       } catch (error) {
-        // console.log(error.response.status)
-        if (error.response && error.response.status === 401) {
-          await handleTokenRefresh();
-          const res = await axios.get('http://localhost:3000/api/user');
-          if (res.status === 200) {
-            // console.log(res.data);
-            setData(res.data);
-            // setPass(true);
-          }
-        } else {
-          // refrechToken()
-          console.error('Error fetching user information:', error);
-        }
+         console.log(error)
       }
     })();
 
     getArticles({page:1})
 
   }, []);
- console.log(blogs, "blogs")
+
 
   return (
     <>
@@ -89,7 +79,7 @@ const {id}=JSON.parse(user)
      
         <p>20000 blogs - 3000 Reads</p>
           {
-            id_user==id ?
+            id_user==user?.id ?
             <div className='flex gap-5 mt-2'>
             <Link  to='/edit-profile' className='btn-light rounded-md'>Edit Profile</Link>
             </div>:

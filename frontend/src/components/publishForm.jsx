@@ -13,6 +13,7 @@ const tagLimit=9
   const handleCloseEvent=()=>{
     dispatch(setEditorState('editor'))
   }
+  const User=JSON.parse(localStorage.getItem('user'))
   const handelBlogTitleChange=(e)=>{
     let input=e.target;
     dispatch(editBlog({...blog,title:input.value}))
@@ -32,7 +33,6 @@ const tagLimit=9
         if(tags.length<tagLimit){
           console.log(tag,'g')
               if(!tags.includes(tag)&&tag.length){
-                console.log('first')
                 dispatch(editBlog({...blog,tags:[...tags,tag]}))
               }
             }else{
@@ -70,7 +70,7 @@ const tagLimit=9
     }
   }
   const storeData=async()=>{
-
+    let loadingToastId 
     try {
       if(!title){
       return  toast.error('please add title')
@@ -87,8 +87,8 @@ const tagLimit=9
       }
         
 
-    const loadingToastId = toast.loading('save article...', { autoClose: false });
-    const  response =await axios.post('http://localhost:3000/api/saveArticle', {...blog,author:"65bb2b207976daa7d11e5140"},
+     loadingToastId = toast.loading('save article...', { autoClose: false });
+    const  response =await axios.post('http://localhost:3000/api/saveArticle', {...blog,author:User?.id},
     {
       withCredentials: true,
     });
@@ -96,11 +96,12 @@ const tagLimit=9
     toast.success('article saved successfully')
   }
     catch (error) {
-      console.log(error)
-      toast.dismiss(loadingToastId)
+        toast.dismiss(loadingToastId)
+        if(error.response.status === 403 || error.response.status === 401){
+        return toast.error('please login to save article')
+      }
       toast.error('Error while saving article')
     }
-    
   }
 
   return (

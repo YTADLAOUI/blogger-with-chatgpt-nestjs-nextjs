@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { getSession } from '../common/session'
 import { Link } from 'react-router-dom'
-import {handleTokenRefresh} from '../common/refrchToken'
 import axios from 'axios'
+import toast from 'react-hot-toast'
+
 
 const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
   let user= getSession('user')
@@ -29,15 +30,9 @@ const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
     });
   
     } catch (error) {
-     if(error.response.status === 401){
-      handleTokenRefresh()
-      const res=  await axios.post('http://localhost:3000/api/likeArticle', {id_blog:blog._id,isLike:like}, {headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true,
-    });
-    return
-     }
+      if(error.response.status === 403 || error.response.status === 401){
+        return toast.error('please login to like')
+      }
       console.log(error)
     }
 
@@ -63,7 +58,7 @@ const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
 
         <div className='flex gap-3 items-center'>
           {
-            blog.author._id === user.id ?
+            blog.author._id === user?.id ?
             <Link to={`/editor/${blog._id}`}>Edit</Link> : ""
           
           }

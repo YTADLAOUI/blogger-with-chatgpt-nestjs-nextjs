@@ -32,7 +32,7 @@ export const blogStructure = {
 
 const blog = () => {
   let {id}= useParams()
-  console.log(id, "id")
+ const user=JSON.parse(localStorage.getItem('user'))
 const [blog, setBlog] = useState(blogStructure)
 const [loading, setLoading] = useState(true)
 const [similarBlogs,setSimilarBlogs]= useState(null)
@@ -45,7 +45,7 @@ const change=useSelector(state=>state.comment.value)
    (
    async () => {
         try{
-       const response= await axios.post('http://localhost:3000/api/getArticle', {id}, {
+       const response= await axios.post('http://localhost:3000/api/getArticle', {id,id_user:user?.id}, {
             headers: {
               'Content-Type': 'application/json',
               'withCredentials': true,

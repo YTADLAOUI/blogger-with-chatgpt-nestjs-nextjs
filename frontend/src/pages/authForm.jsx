@@ -4,9 +4,10 @@ import google from '../assets/google.png'
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { storeSession } from '../common/session';
 import { login } from '../features/authSlice';
+import { change } from '../features/commentSlice';
 
 const authForm = ({page}) => {
   const [username, setUsername] = useState('')
@@ -49,9 +50,9 @@ const authForm = ({page}) => {
                     return toast.error(data.message)
                   }
                   axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-                  console.log(data, "data")
+                  // console.log(data, "data")
                   storeSession('user', JSON.stringify({...data.user, islogin:true}));
-                     dispatch(login(data.user));
+                    //  dispatch(login(data.user));
                      setRedrict(true)
                 }
               catch (error) {
@@ -92,8 +93,9 @@ const authForm = ({page}) => {
     }}
 
     if(redrict){
-      // return <Navigate to="/dashboard" />
-    return  window.location.href = "/dashboard"
+      dispatch(change())
+      return <Navigate to="/" />
+    // return  window.location.href = "/dashboard"
     }
 
   return (

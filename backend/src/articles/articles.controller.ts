@@ -1,30 +1,36 @@
-import { Body, Controller, Get, Param, Patch, Post, Req, Res, UploadedFile, UseInterceptors,  } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors,  } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from 'src/guard/auth.guard';
+import CustomRequest from 'src/interface/CustomRequest';
+import { use } from 'passport';
+
 
 @Controller('')
 export class ArticlesController {
   constructor(
     private readonly articlesService: ArticlesService,
-    private jwtService:JwtService
-    
+    private jwtService: JwtService,
   ) {}
+
+  @UseGuards(AuthGuard)
   @Post('saveArticle')
-  async saveArticle(@Body() body:any ,@Req() req:Request ,@Res({passthrough:true}) res:Response){
+  async saveArticle(@Body() body:any ,@Req() req:CustomRequest ,@Res({passthrough:true}) res:Response){
     console.log('body',body)
-          // if(!req.headers['authorization']){
-           
-          //      return {error: 'No token found'};
-          // }
-          // const accessToken = req.headers['authorization'].replace('Bearer ','');
-          // const {id} = await this.jwtService.verifyAsync(accessToken);
-        if(!body.title || !body.des || !body.content || !body.tags || !body.author){
-              return {error: 'All fields are required'};
-        }
-    return await this.articlesService.save(body);
+    console.log('user_id', req.user_id);
+    if(!body.title || !body.des || !body.content || !body.tags || !body.author){
+      return {error: 'All fields are required'};
+    }
+    try{
+      return await this.articlesService.save(body);
+    }catch(e){
+      console.log("first")
+      return {error: e.message};
+    }
   }
+  @UseGuards(AuthGuard)
   @Post('uploadImage')
   @UseInterceptors(FileInterceptor('banner'))
   async uploadImage(@UploadedFile() file: Express.Multer.File){
@@ -62,24 +68,22 @@ export class ArticlesController {
   }
   @Post('getArticle')
   async getArticle(@Body() body:any){
-    const {id,edit} = body;
-    return await this.articlesService.findOne({ _id: id },edit);
+    const {id,edit,id_user} = body;
+    console.log(id_user,"fghjk")
+    return await this.articlesService.findOne({ _id: id },edit,id_user);
   }
+  @UseGuards(AuthGuard)
   @Patch('updateArticle')
   async updateArticle( @Body() body:any,@Req() req:Request ,@Res({passthrough:true}) res:Response){
     console.log('body',body)
-  //   if(!req.headers['authorization']){
-  //     return {error: 'No token found'};
-  //   }
-  // const accessToken = req.headers['authorization'].replace('Bearer ','');
-  // const {id} = await this.jwtService.verifyAsync(accessToken);
     const {_id,title,banner,content,tags,des,author} = body;
     return await this.articlesService.update(_id,{title,banner,content,tags,des,author});
   }
   @Post('articleByAuthor')
   async articleByAuthor(@Body() body:any){
     const {author,page} = body;
-    return await this.articlesService.findAutourBlogs('65bb2b207976daa7d11e5140',page);
+    console.log('author',author)
+    return await this.articlesService.findAutourBlogs(author,page);
   }
   @Post('countArticlesAuthor')
   async countArticlesAuthor(@Body() body:any ,@Res() res:any ){
@@ -87,18 +91,14 @@ export class ArticlesController {
     const count = await this.articlesService.countArticlesAuthor(author);
     return res.status(200).json({totalDocs:count})
   }
-
+  @UseGuards(AuthGuard)
   @Post('likeArticle')
-  async likeArticle(@Body() body:any,@Req() req:Request ,@Res({passthrough:true}) res:Response){
+  async likeArticle(@Body() body:any,@Req() req:CustomRequest ,@Res({passthrough:true}) res:Response){
     const {id_blog,isLike} = body;
-    if(!req.headers['authorization']){
-      return {error:"No token found"}
-    }
-  const accessToken = req.headers['authorization'].replace('Bearer ','');
-  const {id} = await this.jwtService.verifyAsync(accessToken);
-    return await this.articlesService.likeArticle(id_blog,isLike);
+    const id_user= req.user_id;
+    return await this.articlesService.likeArticle(id_blog,isLike,id_user);
   }
-
+  @UseGuards(AuthGuard)
   @Post('deleteArticle/:id')
   async deleteArticle(@Param('id') id: string) {
     return await this.articlesService.delete(id);

@@ -43,7 +43,7 @@ export class AuthController {
     if(!match){
       return {status:400,message:"Invalid credentials"}
     }
-    const accessToken = await this.jwtService.signAsync({id:user._id},{expiresIn:'60s'});
+    const accessToken = await this.jwtService.signAsync({id:user._id},{expiresIn:'7d'});
     const refreshToken =await this.jwtService.signAsync({id:user._id}); 
     const expire_at = new Date(Date.now() + 7*24*60*60*1000);
     await this.tokenService.save({
@@ -53,6 +53,7 @@ export class AuthController {
     });
     res.status(200);
     res.cookie('refreshToken',refreshToken,{httpOnly:true,maxAge:7*24*60*60*1000});
+    res.cookie('accessToken',accessToken,{httpOnly:true,maxAge:7*24*60*60*1000});
     const obj = { username: user.username, email: user.email, profile_img: user.profile_img, role: user.role, id: user._id};
     return {token:accessToken,user:obj}
   }
@@ -98,9 +99,11 @@ export class AuthController {
   @Post('logout')
   async logout(@Req() req:Request,@Res({passthrough:true}) res:Response){
     const refreshToken =req.cookies['refreshToken'];
+    const accessToken =req.cookies['accessToken'];
     console.log('refreshToken',refreshToken)
     await this.tokenService.delete({token:refreshToken});
     res.clearCookie('refreshToken');
+    res.clearCookie('accessToken');
     return {message:"Logged out"};
   }
   

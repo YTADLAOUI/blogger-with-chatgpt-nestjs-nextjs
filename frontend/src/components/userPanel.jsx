@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const userPanel = () => {
 const navigate = useNavigate();
+const user = JSON.parse(localStorage.getItem('user'))
   const logout =async () => {
     await axios.post('http://localhost:3000/api/logout', {}, {withCredentials: true, headers: {
       'Content-Type': 'application/json'
@@ -11,7 +12,7 @@ const navigate = useNavigate();
     localStorage.removeItem('user')
    navigate('/signin')
   }
-  const username = 'username'
+  
   return (
     <div className='bg-white absolute right-0 border border-grey w-60 overflow-hidden duration-200'>
          <Link to="/editor" className="link pl-8 py-4"> 
@@ -19,7 +20,7 @@ const navigate = useNavigate();
             <span className=" md:inline">Editor</span>
           </i>
         </Link>
-        <Link to={`/user/${username}`} className='link pl-8 py-4'>
+        <Link to={`/profil/${user.id}`} className='link pl-8 py-4'>
             profile
         </Link>
         <Link to='/dashboard/blogs' className='link pl-8 py-4'>

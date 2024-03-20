@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { change } from '../features/commentSlice';
 const commentField = ({action,blog}) => {
   const [Comment, setComment] = useState('')
   const dispatch=useDispatch()
  const user= useSelector(state=>state.auth.user)
- console.log(blog._id, "blog")
- console.log(user.id, "user")
   const handleComment= async()=>{
     try {
       if(Comment.trim() === '') return toast.error('Comment cannot be empty...')
@@ -21,7 +19,10 @@ const commentField = ({action,blog}) => {
       dispatch(change())
       setComment('')
     } catch (error) {
-      
+      if(error.response.status === 403 || error.response.status === 401){
+        return toast.error('please login to save article')
+      }
+      return toast.error('An error occured')
     }
   }
   

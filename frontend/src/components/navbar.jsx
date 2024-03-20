@@ -4,14 +4,19 @@ import logo from '../assets/logo.jpg'
 import UserPanel from './userPanel'
 import { useSelector, useDispatch } from 'react-redux'
 import { getSession } from '../common/session'
+import { change } from '../features/commentSlice'
 
 const navbar = () => {
   const navigation = useNavigate()
   const [searchBoxVisible, setSearchBoxVisible] = useState(false)
   const [userPanelVisible, setUserPanelVisible] = useState(false)
+  const change = useSelector(state => state.comment.value)
   let navigate =useNavigate()
   const data=useSelector(state => state.auth.user);
-  console.log("fff", data)
+  
+const user= JSON.parse(getSession('user'))
+// console.log(user.islogin, "user")
+// console.log(user, "user")
   const handleSearch=(e)=>{
     let query = e.target.value
     console.log(e.keyCode, query)
@@ -19,7 +24,6 @@ const navbar = () => {
       navigate(`/search/${query}`)
     }
   }
-
 
 
   return (
@@ -43,7 +47,7 @@ const navbar = () => {
         </Link>
         {/* --- */}
         {
-        data?.islogin?
+        user?.islogin?
           <>
         <Link to="/dashboard/notification" >
           <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">
@@ -53,7 +57,7 @@ const navbar = () => {
         </Link>
         <div className="relative" onClick={()=>setUserPanelVisible((curr)=>!curr)}>
           <button className='w-12 h-12 rounded-full'>
-            <img src={data.profile_img} alt="profile" className="w-full h-full object-cover rounded-full"/>
+            <img src={user?.profile_img} alt="profile" className="w-full h-full object-cover rounded-full"/>
           </button>
            {
               userPanelVisible?

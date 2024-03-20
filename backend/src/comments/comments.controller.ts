@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
 import { CommentsService } from './comments.service';
+import { AuthGuard } from 'src/guard/auth.guard';
 
 @Controller()
 export class CommentsController {
   constructor(private readonly commentsService:CommentsService) {}
 
+  @UseGuards(AuthGuard)
   @Post('saveComment')
   async saveComment(@Body() body:any){
     try{
@@ -28,6 +30,8 @@ export class CommentsController {
       return {error: e.message};
     }
   }
+  
+  @UseGuards(AuthGuard)
   @Patch('updateComment')
   async updateComment(@Body() body:any){
     try{
@@ -37,12 +41,12 @@ export class CommentsController {
       if(!body.comment){  
         return {error: 'Comment is required'};
       }
-      console.log("gg",body,'ggg')
       return await this.commentsService.update(body.id_comment,{comment:body.comment});
     }catch(e){
       return {error: e.message};
     }
   }
+  @UseGuards(AuthGuard)
   @Post('deleteComment')
   async deleteComment(@Body() body:any){
     try{

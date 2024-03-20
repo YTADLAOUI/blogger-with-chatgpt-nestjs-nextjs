@@ -43,15 +43,15 @@ const blogEditor = () => {
     dispatch(editBlog({...blog,title:input.value}))
   }
   const handleBanner = async (e) => {
-    try {
-      let img = e.target.files[0];
-
-      if (img) {
-        const formData = new FormData();
-        formData.append('banner', img);
-
-        const loadingToastId = toast.loading('Uploading image...', { autoClose: false });
-
+    let img = e.target.files[0];
+    let loadingToastId 
+    if (img) {
+      const formData = new FormData();
+      formData.append('banner', img);
+      
+      loadingToastId = toast.loading('Uploading image...', { autoClose: false });
+      
+      try {
         const response = await axios.post('http://localhost:3000/api/uploadImage', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -66,39 +66,17 @@ const blogEditor = () => {
         if (blogBanner.current) {
           blogBanner.current.src = response.data;
         }
-      }
-    } catch (error) {
-      if(error.response.status === 401){
-        handleTokenRefresh();
-        let img = e.target.files[0];
-
-      if (img) {
-        const formData = new FormData();
-        formData.append('banner', img);
-
-        const loadingToastId = toast.loading('Uploading image...', { autoClose: false });
-
-        const response = await axios.post('http://localhost:3000/api/uploadImage', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          withCredentials: true,
-        });
-
+      } catch (error) {
         toast.dismiss(loadingToastId);
-
-        dispatch(editBlog({ ...blog, banner: response.data }));
-
-        if (blogBanner.current) {
-          blogBanner.current.src = response.data;
+        if(error.response.status === 403 || error.response.status === 401){
+          return toast.error('please login to save image')
         }
+        console.error('Error uploading image:', error);
+        toast.error('Failed to upload image. Please try again.');
       }
-      return
+      }else{
+        return toast.error('please select image')
       }
-      console.error('Error uploading image:', error);
-
-      toast.error('Failed to upload image. Please try again.');
-    }
   };
   const handlePublish=()=>{
     

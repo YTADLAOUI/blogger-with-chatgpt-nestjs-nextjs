@@ -73,10 +73,10 @@ export class ArticlesService {
     }
   }
 
-  async findOne(id,edit){
+  async findOne(id,edit,id_user){
     try {
-      let user_id = "65eacd07e743403f49b1b1a9";
-      const isLike= !await this.notificationService.findOne({article:id._id,user:user_id,type:"like"})
+     
+      const isLike= !await this.notificationService.findOne({article:id._id,user:id_user,type:"like"})
     let incrmentVal = edit !=='edit'? 1 : 0;
     const blog = await this.articleModel.findOneAndUpdate(id,{$inc:{"activity.total_reads":incrmentVal}}).populate('author',"name _id username email profile_img createdAt").select('title des banner content tags activity comments id._id createdAt author')
 
@@ -105,7 +105,6 @@ export class ArticlesService {
   }
   async countArticlesAuthor(id){
     try {
-      console.log('yabhlal',id)
       const count = await this.articleModel.countDocuments({ author:"65bb2b207976daa7d11e5140", draft: false });
       console.log('countYABHLAL',count)
       return count ;
@@ -151,18 +150,18 @@ export class ArticlesService {
     }
 
     const result = await this.cloudinaryService.uploadImage(file).catch(() => {
-      throw new BadRequestException('Invalid file type vbvbvbvb.');
+      throw new BadRequestException('Invalid file type');
     });
     console.log(result);
     return result.url;
   }
 
-  async likeArticle(id_blog,isLike){
+  async likeArticle(id_blog,isLike,user_id){
     console.log(isLike,'isLikeamine')
 
     let increment =  isLike ? 1 : -1;
 
-    let user_id = "65eacd07e743403f49b1b1a9";
+    // let user_id = "65eacd07e743403f49b1b1a9";
     try {
      const blog= await this.articleModel.findOneAndUpdate({_id:id_blog},{$inc:{"activity.total_likes":increment}});
      console.log('blog',blog.author, blog.author.toString())

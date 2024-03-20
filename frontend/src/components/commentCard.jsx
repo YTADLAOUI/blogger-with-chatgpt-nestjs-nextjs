@@ -3,6 +3,7 @@ import { getDay } from '../common/date'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { change } from '../features/commentSlice';
+import toast from 'react-hot-toast'
 
 const commentCard = ({
   index,commentData
@@ -22,6 +23,9 @@ const commentCard = ({
       setEdit(!edit)
       setComment('')
     }catch(e){
+      if(error.response.status === 403 || error.response.status === 401){
+        return toast.error('please login to update comment')
+      }
       console.log(e)
     }
    
@@ -36,6 +40,9 @@ const commentCard = ({
     });
      dispatch(change())
     }catch (error) {
+      if(error.response.status === 403 || error.response.status === 401){
+        return toast.error('please login to delete comment')
+      }
       console.log(error)
     }
   }
@@ -49,12 +56,12 @@ const commentCard = ({
           <p className='min-w-fit'>{getDay(commentData.createdAt)}</p>
             <div className='flex-1 w-max ms-3'>
                     {
-                    commentData.article_author==user.id||commentData.commented_by._id==user.id ?
+                    commentData.article_author==user?.id||commentData.commented_by._id==user?.id ?
                     <>
                     {
                     <>
                     {
-                      commentData.commented_by._id==user.id ?
+                      commentData.commented_by._id==user?.id ?
                       edit?
                       <button onClick={(edit)=>{
                         setEdit(!edit)
