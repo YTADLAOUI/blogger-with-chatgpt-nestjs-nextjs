@@ -3,7 +3,7 @@ import './App.css'
 import Navbar from './components/navbar'
 import { Route, Routes } from 'react-router-dom'
 import AuthForm from './pages/authForm'
-import Dashboard from './pages/dashbord'
+
 import AuthMidd from './middlewares/authMidd'
 import { useDispatch } from 'react-redux'
 import { login } from './features/authSlice'
@@ -14,6 +14,9 @@ import SearchPage from './pages/searchPage'
 import NotFound from './pages/404'
 import Profile from './pages/profile'
 import Blog from './pages/blog'
+import SideNav from './components/sideNav'
+import EditProfile from './pages/editProfile'
+import ChangePassword from './pages/changePassword'
 
 function App() {
 
@@ -48,14 +51,19 @@ function App() {
         <Route index element={<Home/>}/>
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
-        <Route path='dashboard' element={
-          // <AuthMidd>
-            <Dashboard/>
-          // </AuthMidd>
-        }/>
         <Route path='profil/:id_user' element={
             <Profile/>
         }/>
+        <Route path='settings' element={
+          // <AuthMidd>
+            <SideNav/>
+          // </AuthMidd>
+        }>
+          <Route path='edit-profile' element={<EditProfile/>} /> 
+          <Route path='change-password' 
+            element={<ChangePassword/>}
+          /> 
+          </Route>
         <Route path='search/:query' element={<SearchPage/>}/>
         <Route path='*' element={<NotFound/>}/>
         <Route path='blog/:id' element={<Blog/>}/>
