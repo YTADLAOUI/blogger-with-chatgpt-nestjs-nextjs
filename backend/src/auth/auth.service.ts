@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-
+import * as bcrypt from 'bcryptjs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from './models/user.schema';
@@ -24,5 +24,20 @@ export class AuthService {
   async update(id: Types.ObjectId,options){
     return await this.userModel.updateOne({ _id: id },options);
   }
-  
+  async changePassword(id: string, currentPassword: string, newPassword: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new Error('Current password is incorrect');
+    }
+
+    user.password =await  bcrypt.hash(newPassword, 10), newPassword;
+    await user.save();
+
+    return user;
+  }
 }

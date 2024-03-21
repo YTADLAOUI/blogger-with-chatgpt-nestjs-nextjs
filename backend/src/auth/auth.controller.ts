@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req ,HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req ,HttpStatus, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcryptjs';
 import {  RegisterAuth } from './dto/register-auth.dto';
@@ -6,6 +6,8 @@ import {  LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { TokenService } from './token/token.service';
+import { AuthGuard } from 'src/guard/auth.guard';
+import CustomRequest from 'src/interface/CustomRequest';
 
 
 @Controller()
@@ -60,14 +62,7 @@ export class AuthController {
   @Get('user/:id_user')
    async user(@Req() req:Request ,@Res({passthrough:true}) res:Response ,@Param('id_user') id_user:string){ 
     try{
-      // console.log(req.headers['authorization'].replace('Bearer ',''));
-    //   if(!req.headers['authorization']){
-    //     res.status(403);
-    //     return {message:"No token found"}
-    //   }
-    // const accessToken = req.headers['authorization'].replace('Bearer ','');
-    // const {id} = await this.jwtService.verifyAsync(accessToken);
-      console.log(id_user,"dddddddddddd")
+     
     const user = await this.authService.findOneById(id_user)
     const userDetails = { username: user.username, email: user.email, profile_img: user.profile_img, role: user.role, id: user._id};
     res.status(200);
@@ -105,6 +100,16 @@ export class AuthController {
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
     return {message:"Logged out"};
+  }
+  @UseGuards(AuthGuard)
+  @Post('change-password')
+  async changePassword(@Req() req:CustomRequest,@Body() body:any,@Res({passthrough:true}) res:Response){
+    if(!body.currentPassword || !body.newPassword){
+      return {status:400,message:"All fields are required"}
+    }
+   const id = req.user_id;
+  
+    return await this.authService.changePassword(id,body.currentPassword,body.newPassword);
   }
   
 }

@@ -12,6 +12,7 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: CustomRequest = context.switchToHttp().getRequest<CustomRequest>();
     if (!request.headers['cookie']) {
+      console.log(request.headers)
       throw new HttpException('Authorization header not found', HttpStatus.FORBIDDEN);
     }
     const accessToken = request.headers['cookie'].split('accessToken=')[1]
