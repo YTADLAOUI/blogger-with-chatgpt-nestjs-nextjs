@@ -4,15 +4,18 @@ const inputBox = ({name,type,id, value, placeholder,icon,onChange}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-  <div className='relative w-[100%] mb-4'>
-    <input 
+  <div className='relative w-[100%] mb-4 '>
+    {type==="file" && <label htmlFor={id} className="text-center p-5 w-full bg-grey text- rounded-lg">Upload Image</label>}
+  <input 
     name={name}
     type={type==="password" ? showPassword ? "text" : "password":type}
     id={id}
     defaultValue={value}
     placeholder={placeholder}
     onChange={onChange}
-    className='input-box'
+    
+    accept={type==="file" ? "image/*" : null}
+    className={type==="file" ? "hidden" : "input-box"}
     />
     <i className={`fi ${icon} input-icon`}></i>
       {

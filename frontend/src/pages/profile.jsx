@@ -31,8 +31,8 @@ const user=JSON.parse(localStorage.getItem('user'))
      const response= await axios.post('http://localhost:3000/api/articleByAuthor',{page,author},{
         headers: {
           'Content-Type': 'application/json',
-          'withCredentials': true,
-        }   
+        } ,
+        withCredentials: true,
       })
       console.log(response.data, "responseLOLOLOL")
       let formdata = await filterPagination({

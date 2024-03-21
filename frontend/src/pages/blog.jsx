@@ -48,16 +48,16 @@ const change=useSelector(state=>state.comment.value)
        const response= await axios.post('http://localhost:3000/api/getArticle', {id,id_user:user?.id}, {
             headers: {
               'Content-Type': 'application/json',
-              'withCredentials': true,
-            }   
+            },   
+            withCredentials: true,
           })
           console.log(response.data, "response")
           const res= await axios.post('http://localhost:3000/api/searchArticles'
           , {tag:response.data.blog.tags[0],page:1}, {
             headers: {
               'Content-Type': 'application/json',
-              'withCredentials': true,
-            }   
+            }  , 
+            withCredentials: true,
           })
           console.log(res.data, "res")
           setSimilarBlogs(res.data)

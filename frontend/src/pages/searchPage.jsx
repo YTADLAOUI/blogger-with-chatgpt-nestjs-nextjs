@@ -17,8 +17,8 @@ const searchPage = () => {
       const response = await axios.post('http://localhost:3000/api/searchArticles', {tag:query,page}, {
         headers: {
           'Content-Type': 'application/json',
-          'withCredentials': true,
-        }   
+        },
+        withCredentials: true,
       })
       let formDatas= await filterPagination({
         state:blogs,
