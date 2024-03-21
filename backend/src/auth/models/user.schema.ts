@@ -23,6 +23,8 @@ export class User {
         } 
     })
     profile_img: string;
+    @Prop({default: ''})
+    bio: string;
     
     @Prop({enum: ['admin'], default: 'admin'})
     role: string;

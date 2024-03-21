@@ -37,7 +37,19 @@ export class AuthService {
 
     user.password =await  bcrypt.hash(newPassword, 10), newPassword;
     await user.save();
+  }
+  async editProfile(id: string, username: string, profile_img: string, bio: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
 
-    return user;
+    user.username = username;
+    user.profile_img = profile_img;
+    user.bio = bio;
+    await user.save();
+
+    return { username: user.username, email: user.email, profile_img: user.profile_img, role: user.role, id: user._id};
   }
 }
+

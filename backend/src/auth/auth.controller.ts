@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req ,HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req ,HttpStatus, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcryptjs';
 import {  RegisterAuth } from './dto/register-auth.dto';
@@ -8,11 +8,14 @@ import { Request, Response } from 'express';
 import { TokenService } from './token/token.service';
 import { AuthGuard } from 'src/guard/auth.guard';
 import CustomRequest from 'src/interface/CustomRequest';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ArticlesService } from 'src/articles/articles.service';
 
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService, private jwtService:JwtService,private tokenService:TokenService) {}
+  constructor(private readonly authService: AuthService, private jwtService:JwtService,private tokenService:TokenService,private cloudinaryService:CloudinaryService,private articleService: ArticlesService) {}
 @Post('register')
   async register(@Body() body:RegisterAuth){
     if(!body.username || !body.email || !body.password){
@@ -112,4 +115,18 @@ export class AuthController {
     return await this.authService.changePassword(id,body.currentPassword,body.newPassword);
   }
   
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('profile_img'))
+  @Post('edit-profile')
+  async editProfile(@Req() req:CustomRequest,@Body() body:any,@UploadedFile() file: Express.Multer.File){
+    console.log('file',file)
+    console.log('body',body)
+    const id = req.user_id;
+    if(file){
+     body.profile_img = await this.articleService.createImage(file);
+    }
+    console.log(body.profile_img,"profile_img")
+    return await this.authService.editProfile(id,body.username,body.profile_img,body.bio);
+  }
 }
+

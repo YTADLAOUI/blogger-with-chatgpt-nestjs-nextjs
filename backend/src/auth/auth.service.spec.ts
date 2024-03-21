@@ -78,7 +78,7 @@ describe('AuthService', () => {
         select: jest.fn(), // Mock select function
       };
 
-      jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(user as User);
+      jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(user);
 
       const result = await service.findOneById(id);
 
