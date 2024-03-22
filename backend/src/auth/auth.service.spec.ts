@@ -72,7 +72,26 @@ describe('AuthService', () => {
     });
   });
 
+  it('should find a user by ID and return selected fields', async () => {
+    // Test data
+    const userId = 'user_id';
+    const userData = {
+      _id: userId,
+      username: 'testuser',
+      email: 'test@example.com',
+      profile_img: 'profile.jpg',
+      role: 'user',
+    };
+
+    (userModel.findOne as jest.Mock).mockReturnValueOnce({
+      select: jest.fn().mockResolvedValueOnce(userData),
+    });
   
+    const result = await service.findOneById(userId);
+    expect(userModel.findOne).toHaveBeenCalledWith({ _id: userId });
+
+    expect(result).toEqual(userData);
+  });
   
 
 });
