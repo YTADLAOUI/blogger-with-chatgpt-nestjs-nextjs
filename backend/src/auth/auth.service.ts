@@ -35,7 +35,7 @@ export class AuthService {
       throw new Error('Current password is incorrect');
     }
 
-    user.password =await  bcrypt.hash(newPassword, 10), newPassword;
+    user.password = await  bcrypt.hash(newPassword, 10), newPassword;
     await user.save();
   }
   async editProfile(id: string, username: string, profile_img: string, bio: string) {

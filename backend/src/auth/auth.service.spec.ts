@@ -3,6 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { AuthService } from './auth.service';
 import { User } from './models/user.schema';
+import * as bcrypt from 'bcryptjs';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -114,5 +115,89 @@ describe('AuthService', () => {
     
     expect(result).toEqual({ nModified: 1 });
   });
+  
+it('should change user password', async () => {
+  const userId = 'user_id';
+  const currentPassword = 'old_password';
+  const newPassword = 'new_password';
+  const hashedPassword = '$2a$10$NLe8clLkUuMqApv/DX5uMO3GQe5kPhzKUmUPe9lWblKPO9p9p3o4M';
 
+  const user = {
+    _id: userId,
+    password: hashedPassword,
+    save: jest.fn(),
+  };
+
+  (userModel.findById as jest.Mock).mockResolvedValueOnce(user);
+  jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true as never);
+  jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce(hashedPassword as never);
+
+  await service.changePassword(userId, currentPassword, newPassword);
+
+  expect(userModel.findById).toHaveBeenCalledWith(userId);
+
+  expect(bcrypt.compare).toHaveBeenCalledWith(currentPassword, user.password);
+
+  expect(bcrypt.hash).toHaveBeenCalledWith(newPassword, 10);
+
+  expect(user.password).toEqual(hashedPassword);
+
+  expect(user.save).toHaveBeenCalled();
+});
+
+it('should edit user profile', async () => {
+
+  const userId = 'user_id';
+  const username = 'new_username';
+  const profileImg = 'new_profile_img.jpg';
+  const bio = 'new_bio';
+
+  const user = {
+    _id: userId,
+    username: 'old_username',
+    email: 'test@example.com',
+    profile_img: 'old_profile_img.jpg',
+    bio: 'old_bio',
+    role: 'user',
+    save: jest.fn(),
+  };
+
+  (userModel.findById as jest.Mock).mockResolvedValueOnce(user);
+
+  
+  const result = await service.editProfile(userId, username, profileImg, bio);
+
+ 
+  expect(userModel.findById).toHaveBeenCalledWith(userId);
+
+ 
+  expect(user.username).toEqual(username);
+  expect(user.profile_img).toEqual(profileImg);
+  expect(user.bio).toEqual(bio);
+
+  
+  expect(user.save).toHaveBeenCalled();
+
+  
+  expect(result).toEqual({
+    username: username,
+    email: user.email,
+    profile_img: profileImg,
+    role: user.role,
+    id: userId,
+  });
+});
+it('should throw error if user is not found', async () => {
+  // Données de test
+  const userId = 'user_id';
+  const username = 'new_username';
+  const profileImg = 'new_profile_img.jpg';
+  const bio = 'new_bio';
+
+  (userModel.findById as jest.Mock).mockResolvedValueOnce(null);
+
+  await expect(service.editProfile(userId, username, profileImg, bio)).rejects.toThrowError('User not found');
+
+  expect(userModel.findById).toHaveBeenCalledWith(userId);
+});
 });
