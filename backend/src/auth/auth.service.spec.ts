@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AuthService } from './auth.service';
 import { User } from './models/user.schema';
 
@@ -60,7 +60,14 @@ describe('AuthService', () => {
   describe('findOne', () => {
     it('should find a user by email', async () => {
       const email = 'test@example.com';
-      const user = {};
+      const userId = 'user_id';
+      const user = {
+        _id: userId,
+        username: 'testuser',
+        email: email,
+        profile_img: 'profile.jpg',
+        role: 'user',
+      };
 
       jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(user);
 
@@ -92,6 +99,20 @@ describe('AuthService', () => {
 
     expect(result).toEqual(userData);
   });
-  
+  it('should update a user with provided ID and options', async () => {
+   
+    const userId = new Types.ObjectId();
+    const options = { role: 'admin' };
+
+    
+    (userModel.updateOne as jest.Mock).mockResolvedValueOnce({ nModified: 1 }); 
+    const result = await service.update(userId, options);
+
+    
+    expect(userModel.updateOne).toHaveBeenCalledWith({ _id: userId }, options);
+
+    
+    expect(result).toEqual({ nModified: 1 });
+  });
 
 });
