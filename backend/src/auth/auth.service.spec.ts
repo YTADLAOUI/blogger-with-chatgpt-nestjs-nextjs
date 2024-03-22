@@ -55,7 +55,24 @@ describe('AuthService', () => {
     });
   });
   
+  
 
+  describe('findOne', () => {
+    it('should find a user by email', async () => {
+      const email = 'test@example.com';
+      const user = {};
+
+      jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(user);
+
+      const result = await service.findOne(email);
+
+      expect(userModel.findOne).toHaveBeenCalledTimes(1);
+      expect(userModel.findOne).toHaveBeenCalledWith({ email });
+      expect(result).toEqual(user);
+    });
+  });
+
+  
   
 
 });
