@@ -123,5 +123,50 @@ describe('ArticlesService', () => {
   
     expect(articleModel.countDocuments).toHaveBeenCalledWith({ draft: false });
   });
+  it('should return all non-draft articles for a given page', async () => {
+    const page = 2;
+    const blogs = [{
+      title: 'Blog 1',
+      banner: 'banner1',
+      content: ['content1'],
+      tags: ['tag1'],
+      author: {
+        username: 'author',
+        email: 'test@gmail.com',
+        profile_img: 'profile.jpg' 
+      }
+    }, {
+      title: 'Blog 2',
+      banner: 'banner2',
+      content: ['content2'],
+      tags: ['tag2'],
+      author: {
+        username: 'author',
+        email: 'test@gmail.com',
+        profile_img: 'profile.jpg' 
+      }
+    }];
   
+    const mockQuery = {
+      populate: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      exec: jest.fn().mockResolvedValue(blogs),
+      lean: jest.fn().mockReturnThis(), 
+    };
+  
+  
+    const findMock = jest.fn().mockReturnValue(mockQuery);
+    jest.spyOn(articleModel, 'find').mockImplementation(findMock);
+ 
+    const result = await service.findAll(page);
+  
+    
+    expect(result).toEqual(mockQuery); 
+    expect(findMock).toHaveBeenCalledWith({ draft: false });
+    expect(findMock).toHaveBeenCalledTimes(1);
+});
+
 });

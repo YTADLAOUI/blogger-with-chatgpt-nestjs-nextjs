@@ -33,4 +33,23 @@ describe('CommentsService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('save', () => {
+    it('should save a new comment', async () => {
+      // Test data
+      const articleId = 'articleId';
+      const body = 'body';
+      const saveMock = jest.fn().mockResolvedValue({
+        articleId,
+        body,
+      });
+      jest.spyOn(service, 'save').mockImplementation(saveMock);
+
+      const createdComment = await service.save({ articleId, body });
+
+      expect(saveMock).toHaveBeenCalledTimes(1);
+      expect(saveMock).toHaveBeenCalledWith({ articleId, body });
+      expect(createdComment).toEqual({ articleId, body });
+    });
+  });
 });
