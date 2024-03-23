@@ -64,5 +64,18 @@ describe('CommentsService', () => {
     expect(findOneMock).toHaveBeenCalledWith(commentId);
     expect(foundComment).toEqual(comment);
   });
+  it('should update a comment by id', async () => {
+    const commentId = 'commentId';
+    const options = { body: 'updated body' };
+    const updatedComment = { _id: commentId, ...options };
+    const updateOneMock = jest.fn().mockResolvedValue(updatedComment);
+    jest.spyOn(service, 'update').mockImplementation(updateOneMock);
+
+    const result = await service.update(commentId, options);
+
+    expect(updateOneMock).toHaveBeenCalledTimes(1);
+    expect(updateOneMock).toHaveBeenCalledWith(commentId, options);
+    expect(result).toEqual(updatedComment);
+  });
 });
 
