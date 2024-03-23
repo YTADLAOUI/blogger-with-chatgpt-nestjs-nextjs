@@ -52,4 +52,17 @@ describe('CommentsService', () => {
       expect(createdComment).toEqual({ articleId, body });
     });
   });
+  it('should find a comment by id', async () => {
+    const commentId = 'commentId';
+    const comment = { _id: commentId, body: 'body' };
+    const findOneMock = jest.fn().mockResolvedValue(comment);
+    jest.spyOn(service, 'findOne').mockImplementation(findOneMock);
+
+    const foundComment = await service.findOne(commentId);
+
+    expect(findOneMock).toHaveBeenCalledTimes(1);
+    expect(findOneMock).toHaveBeenCalledWith(commentId);
+    expect(foundComment).toEqual(comment);
+  });
 });
+
