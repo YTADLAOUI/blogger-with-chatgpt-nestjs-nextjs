@@ -58,6 +58,12 @@ describe('ArticlesService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+  it('should be defined', () => {
+    expect(cloudinaryService).toBeDefined();
+  });
+  it('should be defined', () => {
+    expect(notificationsService).toBeDefined();
+  });
   it('should save a new article', async () => {
     // Données de test
     const title = 'Test Title';
@@ -98,5 +104,24 @@ describe('ArticlesService', () => {
       author: authorId,
     });
   });
+  it('should return count of non-draft articles', async () => {
+    const count = 5;
+    articleModel.countDocuments = jest.fn().mockResolvedValue(count);
 
+    expect(await service.allLatestBlogs()).toBe(count);
+    expect(articleModel.countDocuments).toHaveBeenCalledWith({ draft: false });
+  });
+  it('should handle errors from countDocuments', async () => {
+    const error = new Error('Database error');
+    articleModel.countDocuments = jest.fn().mockRejectedValue(error);
+  
+    try {
+      await service.allLatestBlogs();
+    } catch (e) {
+      expect(e).toBe(error);
+    }
+  
+    expect(articleModel.countDocuments).toHaveBeenCalledWith({ draft: false });
+  });
+  
 });
