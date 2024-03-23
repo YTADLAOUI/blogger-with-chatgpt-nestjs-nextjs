@@ -99,8 +99,8 @@ export class ArticlesController {
     return await this.articlesService.likeArticle(id_blog,isLike,id_user);
   }
   @UseGuards(AuthGuard)
-  @Post('deleteArticle/:id')
-  async deleteArticle(@Param('id') id: string) {
-    return await this.articlesService.delete(id);
+  @Post('deleteArticle')
+  async deleteArticle(@Body() body:any){
+    return await this.articlesService.delete(body.id_blog);
   }
 }
