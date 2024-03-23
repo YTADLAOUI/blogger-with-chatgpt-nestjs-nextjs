@@ -4,7 +4,7 @@ import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { extname } from 'path';
-import { NotificationsService } from 'src/notifications/notifications.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { DeleteResult } from 'mongodb';
 
 @Injectable()
