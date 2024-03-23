@@ -144,6 +144,46 @@ it('should change user password', async () => {
 
   expect(user.save).toHaveBeenCalled();
 });
+it('should throw an error if user not found', async () => {
+  const userId = 'user_id';
+  const currentPassword = 'old_password';
+  const newPassword = 'new_password';
+
+  // Mocking findById to return undefined (user not found)
+  (userModel.findById as jest.Mock).mockResolvedValueOnce(undefined);
+
+  await expect(service.changePassword(userId, currentPassword, newPassword))
+    .rejects.toThrowError('User not found');
+
+  // Verifying that findById was called with the correct user ID
+  expect(userModel.findById).toHaveBeenCalledWith(userId);
+});
+
+it('should throw an error if current password is incorrect', async () => {
+  const userId = 'user_id';
+  const currentPassword = 'old_password';
+  const newPassword = 'new_password';
+
+  
+  const user = {
+    _id: userId,
+    password: '$2a$10$InvalidHash',
+  };
+
+  
+  (userModel.findById as jest.Mock).mockResolvedValueOnce(user);
+
+  
+  jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(false as never);
+
+  await expect(service.changePassword(userId, currentPassword, newPassword))
+    .rejects.toThrowError('Current password is incorrect');
+  expect(userModel.findById).toHaveBeenCalledWith(userId); 
+  expect(bcrypt.compare).toHaveBeenCalledWith(currentPassword, user.password);
+});
+
+
+
 
 it('should edit user profile', async () => {
 
