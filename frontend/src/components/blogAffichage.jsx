@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getSession } from '../common/session'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
@@ -14,7 +14,7 @@ const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
    useEffect(() => {
     setLike(islike)
    }, [islike])
-   
+   const navigate=useNavigate()
    
  const handlLike=async()=>{
     console.log(like, "like")
@@ -35,8 +35,21 @@ const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
       }
       console.log(error)
     }
-
  }
+  const deleteArticle=async()=>{
+    alert('Are you sure you want to delete this article?')
+    try {
+      const res= await axios.post('http://localhost:3000/api/deleteArticle', {id_blog:blog._id}, {headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+    console.log(res.data, "res")
+   navigate('/')
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <>
     <hr className="border-grey my-2"/>
@@ -59,7 +72,12 @@ const blogAffichage = ({blog,islike,setCommentWrapper,commentWrapper}) => {
         <div className='flex gap-3 items-center'>
           {
             blog.author._id === user?.id ?
-            <Link to={`/editor/${blog._id}`}>Edit</Link> : ""
+            <>
+            <Link to={`/editor/${blog._id}`}>Edit</Link>
+            <button onClick={deleteArticle} className='text-red'>delete</button>
+            </>
+            
+            : ""
           
           }
           {/* <Link to={`/editor/${blog._id}`} className='underline '>Edit</Link>  */}

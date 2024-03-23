@@ -4,6 +4,7 @@ import { editBlog, setEditorState } from '../features/editSlice'
 import Tag from './tags'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import banners from '../assets/blogbanner.png'
 const publishForm = ({id}) => {
   const dispatch=useDispatch()
   const blog=useSelector(state=>state.blog.value)
@@ -63,7 +64,7 @@ const tagLimit=9
         }
       })
       console.log(response.data, "response")
-
+      dispatch(editBlog({title:'',des:'',tags:[],banner:'',content:[]}))
 
     }catch (error) {
       console.log(error)
@@ -94,6 +95,7 @@ const tagLimit=9
     });
     toast.dismiss(loadingToastId);
     toast.success('article saved successfully')
+    dispatch(editBlog({title:'',des:'',tags:[],banner:'',content:[]}))
   }
     catch (error) {
         toast.dismiss(loadingToastId)
@@ -117,7 +119,7 @@ const tagLimit=9
           Preview
         </p>
         <div className='w-full aspect-video rounded-lg overflow-hidden bg-grey mt-4'>
-          <img src={banner}/>
+          <img src={banner ? banner: banners}/>
         </div>
         <h1 className='text-4xl font-medium mt-2 leading-tight line-clamp-2'>{title}</h1>
         <p className='font-gelasio line-clamp-2 text-xl leading-7 mt-4'>{des}</p>
