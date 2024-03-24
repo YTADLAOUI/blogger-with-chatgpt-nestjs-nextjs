@@ -99,9 +99,9 @@ const user=JSON.parse(localStorage.getItem('user'))
       :
        <NodataMessage message="No blogs found"/>
         }
-         {
+         
        <LoadMoreData state={blogs} fetchData={getArticles}/>  
-        }
+        
       </>
         {
            <About className="" bio={bio} />

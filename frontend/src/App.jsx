@@ -39,14 +39,14 @@ function App() {
     <>
     <Routes>
       <Route path='/editor' element={
-        // <AuthMidd>
+        <AuthMidd>
           <Editor/>
-        // </AuthMidd>
+        </AuthMidd>
       }/>
       <Route path='/editor/:id' element={
-        //  <AuthMidd>
+         <AuthMidd>
           <Editor/>
-        // </AuthMidd>
+        </AuthMidd>
       }/>
       <Route path='/' element={<Navbar/>} >
         <Route index element={<Home/>}/>
@@ -56,14 +56,28 @@ function App() {
           <Profile/>
         }/>
         <Route path='settings' element={
-          // <AuthMidd>
-          <SideNav/>
-          // </AuthMidd>
+          <AuthMidd>
+             <SideNav/>
+           </AuthMidd>
         }>
-          <Route path='notifications' element={<Notifictions/>} />
-          <Route path='edit-profile' element={<EditProfile/>} /> 
+          <Route path='notifications' element={
+          <AuthMidd>
+            <Notifictions/>
+          </AuthMidd>
+          
+          } />
+          <Route path='edit-profile' element={
+            <authMidd>
+          <EditProfile/>
+          </authMidd>
+          
+          } /> 
           <Route path='change-password' 
-            element={<ChangePassword/>}
+            element={
+          <AuthMidd>
+            <ChangePassword/>
+          </AuthMidd>
+          }
           /> 
           </Route>
         <Route path='search/:query' element={<SearchPage/>}/>

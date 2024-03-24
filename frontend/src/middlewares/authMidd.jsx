@@ -3,27 +3,28 @@ import React, { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { getSession } from '../common/session';
 import { useDispatch } from 'react-redux';
+import { login } from '../features/authSlice';
 
 const AuthMidd = ({ children }) => {
 
-  const [user, setUser] = useState(null)
+ 
   const dispatch = useDispatch()
-  const navigate = useNavigate();
+  const user =JSON.parse(getSession('user'))  ;
   useEffect(() => {
-    const user = getSession('user');
-    if (user) {
-      dispatch(login(JSON.parse(user)));
-      setUser(JSON.parse(user).isLogin);
+    console.log(user.islogin, "user")
+    if (user?.islogin) {
+      dispatch(login(user));
+    
     } else {
       dispatch(login(null));
+      
     }
   }, []);
-      if (user) { 
-        return children
-      } 
-      else {
-      return window.location.href = '/signin'
-      }
+  if(user?.islogin){
+    return children
+  }else{
+    return window.location.href='/signin'
+  }
 };
 
 export default AuthMidd;

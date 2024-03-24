@@ -68,7 +68,7 @@ import { getDay } from '../common/date'
                               }
                           </div>
                           <div className="pl-3 ">
-                              <p tabIndex="0" className="focus:outline-none text-sm leading-none"><span className="text-indigo-700">{notification.user.username}</span> {notification.type=='like'?'favourited':'commented'} an <span className="text-indigo-700">{notification.article.title}</span></p>
+                              <p tabIndex="0" className="focus:outline-none text-sm leading-none"><span className="text-indigo-700">{notification.user.username}</span> {notification.type=='like'?'favourited':'commented'} an <span className="text-indigo-700">{notification.article?.title}</span></p>
                               <p tabIndex="0" className="focus:outline-none text-xs leading-3 pt-1 text-gray-500 mt-4">{getDay(notification.createdAt)}</p>
                           </div>
                       </div>
