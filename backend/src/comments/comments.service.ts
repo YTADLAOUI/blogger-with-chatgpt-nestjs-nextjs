@@ -36,7 +36,7 @@ export class CommentsService {
     console.log("gg",body,'ggg')
    const fn= await this.commentModel.deleteOne({ _id: body.id_comment });
    const incr=await this.articleService.update(body.article_id,{$inc:{"activity.total_comments":-1}});
-   console.log("gg",incr,'ggg')
+   await this.notificationService.removeNotification({comment:body.id_comment});
    return fn;
   }
   
