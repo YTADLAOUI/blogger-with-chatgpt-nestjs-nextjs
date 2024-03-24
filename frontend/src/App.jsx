@@ -17,6 +17,7 @@ import Blog from './pages/blog'
 import SideNav from './components/sideNav'
 import EditProfile from './pages/editProfile'
 import ChangePassword from './pages/changePassword'
+import  Notifictions  from './pages/notifictions'
 
 function App() {
 
@@ -52,13 +53,14 @@ function App() {
         <Route path='signin' element={<AuthForm page="sign-in"/>}/>
         <Route path='signup' element={<AuthForm page="sign-up"/>}/>
         <Route path='profil/:id_user' element={
-            <Profile/>
+          <Profile/>
         }/>
         <Route path='settings' element={
           // <AuthMidd>
-            <SideNav/>
+          <SideNav/>
           // </AuthMidd>
         }>
+          <Route path='notifications' element={<Notifictions/>} />
           <Route path='edit-profile' element={<EditProfile/>} /> 
           <Route path='change-password' 
             element={<ChangePassword/>}
