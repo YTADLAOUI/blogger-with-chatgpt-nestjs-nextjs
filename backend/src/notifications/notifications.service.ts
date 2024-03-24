@@ -19,6 +19,12 @@ export class NotificationsService {
   async findOne(query:any){
     return await this.notificationModel.findOne(query);
   }
+  async findAll(query:any){
+    let maxLimit = 6;
+    return await this.notificationModel.find(query).populate('user','username email _id profile_img createdAt').populate('article','title _id')
+    .sort({ createdAt: -1 })
+    .limit(maxLimit);
+  }
   async removeNotification(query: any) : Promise<DeleteResult> {
     try {
         const result = await this.notificationModel.deleteOne(query);

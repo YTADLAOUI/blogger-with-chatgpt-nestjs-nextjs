@@ -115,7 +115,7 @@ export class ArticlesService {
     }
   }
     async search(tag,page){
-      let maxLimit = 2;
+      let maxLimit = 5;
       let findQuery = {draft: false, tags:tag};
       try {
         
