@@ -22,7 +22,6 @@ export class NotificationsService {
   async removeNotification(query: any) : Promise<DeleteResult> {
     try {
         const result = await this.notificationModel.deleteOne(query);
-        console.log(result); 
         return result;
     } catch (error) {
         console.error("Error while removing notification:", error);

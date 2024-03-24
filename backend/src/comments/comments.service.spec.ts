@@ -3,13 +3,14 @@ import { CommentsService } from './comments.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Comment } from './models/comment.schema';
 import { ArticlesService } from 'src/articles/articles.service';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 describe('CommentsService', () => {
   let service: CommentsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CommentsService, ArticlesService,
+      providers: [CommentsService, ArticlesService,NotificationsService,
         { provide: getModelToken(Comment.name),
           useValue: {
             findOne: jest.fn(),
@@ -19,6 +20,12 @@ describe('CommentsService', () => {
           },
           {
             provide: ArticlesService,
+            useValue: {
+              findOne: jest.fn(),
+            },
+          },
+          {
+            provide: NotificationsService,
             useValue: {
               findOne: jest.fn(),
             },
