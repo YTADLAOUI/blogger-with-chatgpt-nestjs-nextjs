@@ -9,16 +9,14 @@ const commentCard = ({
   index,commentData
 }) => {
   const user=JSON.parse(localStorage.getItem('user'))
-  console.log(user, "user")
-  console.log(commentData, "commentData")
+ 
   const [edit, setEdit] = useState(true)
   const [comment,setComment]=useState('')
-  console.log(comment)
+
   const dispatch=useDispatch()
   const editComment=async ()=>{
     try{
       const res= await axios.patch( 'http://localhost:3000/api/updateComment', {id_comment:commentData._id,comment:comment}, {headers: { 'Content-Type': 'application/json', }, withCredentials: true, } );
-      console.log(res.data,'gggg')
       dispatch(change())
       setEdit(!edit)
       setComment('')

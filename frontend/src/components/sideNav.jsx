@@ -28,7 +28,7 @@ const sideNav = () => {
               <i className='fi fi-rr-document me-3' ></i>
               Blogs
               </NavLink>
-            <NavLink to="/dashboard/notification" className='sidebar-link' onClick={(e)=>setPage(e.target.innerText)}>
+            <NavLink to="/settings/notifications" className='sidebar-link' onClick={(e)=>setPage(e.target.innerText)}>
               <i className='fi fi-rr-bell me-3' ></i>
               Notification
               </NavLink>
